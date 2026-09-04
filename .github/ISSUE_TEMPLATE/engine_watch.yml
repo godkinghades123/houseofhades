@@ -1,0 +1,70 @@
+name: Engine watch / trade
+description: Watchlist, entry levels, thesis, risk — Engine account only.
+title: "[Engine] "
+labels: ["engine"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Engine rules:** ≤3% risk default · defined risk on options · KeyBank floor before new cash deploys · journal before size.
+  - type: input
+    id: ticker
+    attributes:
+      label: Ticker / name
+      placeholder: VICI
+    validations:
+      required: true
+  - type: dropdown
+    id: signal_type
+    attributes:
+      label: Signal type
+      options:
+        - Watch
+        - Entry
+        - Exit
+        - Reversal
+        - Macro
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: entry_level
+    attributes:
+      label: Entry interest / level
+      placeholder: "~$24.96"
+  - type: textarea
+    id: thesis
+    attributes:
+      label: Thesis
+      description: Why this name; hold horizon if known.
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Engine Indicator Checklist (any NO = no trade)
+      value: |
+        - [ ] Thesis written (Engine not Core by default)
+        - [ ] Market structure clear on decision TF
+        - [ ] Key S/R level defined
+        - [ ] Trend vs MAs fits bias
+        - [ ] RSI constructive with structure
+        - [ ] Volume confirms
+        - [ ] Stop + invalidation written before size
+        - [ ] Risk ≤3% Engine equity (≤8% only with full stack)
+        - [ ] Signal Log / Trade Log updated
+  - type: input
+    id: review_date
+    attributes:
+      label: Review by (date)
+      placeholder: "2026-09-15"
+  - type: input
+    id: notion_signal
+    attributes:
+      label: Signal Log / Notion link
+      placeholder: https://www.notion.so/...
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome (fill when closed)
+      placeholder: Keep watching / new level / passed / entered — notes

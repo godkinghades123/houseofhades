@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: HADES Headquarters (Notion)
+    url: https://www.notion.so/c55194f27bfe4bc78b3ad12cb23bd22f
+    about: Strategy, capital rules, and OS memory live in Notion — not as blank GitHub issues.
+  - name: Open issues board
+    url: https://github.com/godkinghades123/houseofhades/issues
+    about: Execution tasks for houseofhades.

@@ -1,0 +1,53 @@
+name: Execution task
+description: Default ship work — cash, ops, Stage 1 blockers, general to-dos.
+title: "[Exec] "
+labels: ["execution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **HADES rule:** GitHub = execution. Notion = memory/OS. Close this issue when the work is done.
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Lane
+      description: Where this work sits in the underworld.
+      options:
+        - Cash / Survival
+        - Content
+        - Engine
+        - Foundation / Legal
+        - OS / System
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+      description: One or two sentences.
+      placeholder: e.g. KeyBank is under the $700 floor; rent depends on cash discipline.
+    validations:
+      required: true
+  - type: textarea
+    id: done_when
+    attributes:
+      label: Done when
+      description: Checklist criteria.
+      value: |
+        - [ ] 
+        - [ ] 
+        - [ ] Notion updated if balances/rules changed
+    validations:
+      required: true
+  - type: input
+    id: notion_link
+    attributes:
+      label: Notion link
+      description: HQ, Continuity, Calendar, or related page URL.
+      placeholder: https://www.notion.so/...
+  - type: textarea
+    id: blocked
+    attributes:
+      label: Blocked by / notes
+      description: Optional.

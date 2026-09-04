@@ -1,0 +1,56 @@
+name: Content
+description: Market Tips, posts, reels, cadence — Chart / Philosophy / Commentary.
+title: "[Content] "
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Pillars:** Chart Education · HADES Philosophy · Market Commentary. Two-layer captions when posting.
+  - type: dropdown
+    id: pillar
+    attributes:
+      label: Pillar
+      options:
+        - Chart Education
+        - HADES Philosophy
+        - Market Commentary
+        - Mixed / other
+      default: 2
+    validations:
+      required: true
+  - type: dropdown
+    id: format
+    attributes:
+      label: Format
+      options:
+        - Market Tip
+        - Reel / short video
+        - Carousel / static
+        - Newsletter / long
+        - Other
+      default: 0
+  - type: input
+    id: tip_id
+    attributes:
+      label: Tip / piece ID (if any)
+      placeholder: Tip 007
+  - type: textarea
+    id: done_when
+    attributes:
+      label: Done when
+      value: |
+        - [ ] Posted live
+        - [ ] Content Calendar marked Posted
+        - [ ] Visuals / script linked if used
+    validations:
+      required: true
+  - type: input
+    id: notion_calendar
+    attributes:
+      label: Content Calendar / Continuity link
+      placeholder: https://www.notion.so/...
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / captions hooks

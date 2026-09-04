@@ -1,0 +1,47 @@
+name: Foundation / legal
+description: Trust, entity, Stage 1 blockers, long-horizon OS setup.
+title: "[Foundation] "
+labels: ["foundation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Stage 1:** Trust notarization and consistent cadence are exit items. Draft ≠ legal effect until notarized + funded.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Trust / estate
+        - Entity / tax structure
+        - Stage 1 checklist item
+        - Banking / accounts setup
+        - Other foundation
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it matters
+    validations:
+      required: true
+  - type: textarea
+    id: done_when
+    attributes:
+      label: Done when
+      value: |
+        - [ ] 
+        - [ ] Continuity / HQ updated
+        - [ ] Stage 1 checklist updated if applicable
+    validations:
+      required: true
+  - type: input
+    id: notion_link
+    attributes:
+      label: Notion link
+      placeholder: https://www.notion.so/...
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / next physical step
