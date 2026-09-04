@@ -43,14 +43,15 @@
 
 Phrases like “How is the market today” → weekly net changes for watchlists on file + 5 news items mapped to WLs + HADES filter + Signal Log rows when actionable.
 
-## Notion page placement rule (PP)
+## Notion placement + where rules live
 
-**No new logged information at the top of Notion pages by default.**
+**Placement (all Notion pages):** Do not insert new logs at the **top** by default. Append to the **bottom** or update the **section that best fits**.
 
-1. Append to the **bottom**, or  
-2. Update / add inside the **section that best fits** (cash → cash section; signals → Signal Log; session notes → session block at end of Continuity).
+Applies to: HQ, Continuity, Treasury, Signal Log, Calendar, Vault, Academy, and every other HADES page PP edits.
 
-Exceptions only if the founder asks for top placement or a full-page cleanup/replace.
+**Headquarters is not a rule book.** HQ = morning ops (tasks, cash, scorecard, links, open issues). Never park PP rules, edit policies, or system meta on HQ.
+
+**Rules / policy / session memory** → Continuity (and this `docs/` mirror when rules change).
 
 ## Legal / Stage 1
 
