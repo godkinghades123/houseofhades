@@ -43,6 +43,15 @@
 
 Phrases like “How is the market today” → weekly net changes for watchlists on file + 5 news items mapped to WLs + HADES filter + Signal Log rows when actionable.
 
+## Notion page placement rule (PP)
+
+**No new logged information at the top of Notion pages by default.**
+
+1. Append to the **bottom**, or  
+2. Update / add inside the **section that best fits** (cash → cash section; signals → Signal Log; session notes → session block at end of Continuity).
+
+Exceptions only if the founder asks for top placement or a full-page cleanup/replace.
+
 ## Legal / Stage 1
 
 - **Hades Revocable Living Trust** — drafted; **not notarized / not funded** → still a Stage 1 blocker  
