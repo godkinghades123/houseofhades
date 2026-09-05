@@ -1,0 +1,43 @@
+{
+  "exact_phrases": {
+    "how is the market today": { "tools": ["web", "notion"], "order": ["notion", "web"], "capability": "market.brief" },
+    "how's the market": { "tools": ["web", "notion"], "order": ["notion", "web"], "capability": "market.brief" },
+    "market update": { "tools": ["web", "notion"], "order": ["notion", "web"], "capability": "market.brief" },
+    "search my notion": { "tools": ["notion"], "capability": "knowledge.retrieve" },
+    "update signal log": { "tools": ["notion"], "capability": "knowledge.write" },
+    "log to continuity": { "tools": ["notion"], "capability": "knowledge.write" },
+    "close the issue": { "tools": ["github"], "capability": "issue.update" },
+    "create a github issue": { "tools": ["github"], "capability": "issue.create" },
+    "push to the repo": { "tools": ["github"], "capability": "repo.modify" },
+    "commit this": { "tools": ["github"], "capability": "repo.modify" },
+    "house of hades repo": { "tools": ["github"], "capability": "repo.modify" }
+  },
+  "hard_rules": [
+    {
+      "id": "PP-ROUTE-001",
+      "if_contains_any": ["commit", "push", "repository", "repo file", "issue template", "github issue"],
+      "unless_contains": ["notion issue url only"],
+      "force_tool": "github",
+      "reason": "Repository / execution mutations always GitHub"
+    },
+    {
+      "id": "PP-ROUTE-002",
+      "if_contains_any": ["continuity", "signal log", "treasury", "headquarters", "scroll library", "content calendar"],
+      "force_tool": "notion",
+      "reason": "Memory and OS pages always Notion"
+    },
+    {
+      "id": "PP-ROUTE-003",
+      "if_contains_any": ["github and notion", "issue and signal log", "link issue to notion"],
+      "force_tools": ["github", "notion"],
+      "order": ["github", "notion"],
+      "reason": "Cross-system: execute first, then memory link"
+    },
+    {
+      "id": "PP-ROUTE-004",
+      "if_contains_any": ["remind me", "set a reminder", "every two days"],
+      "force_tool": "automations",
+      "reason": "Reminders → Automations, not Todoist"
+    }
+  ]
+}

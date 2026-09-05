@@ -1,0 +1,128 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-05",
+  "description": "PP cheap capability index. Route first; load only matched tools.",
+  "split_rule": {
+    "github": "execution",
+    "notion": "memory",
+    "linear": "optional_project_mgmt",
+    "automations": "reminders_schedule",
+    "calendar": "time",
+    "gmail": "comms",
+    "drive": "files",
+    "voice": "audio"
+  },
+  "tools": {
+    "github": {
+      "display": "GitHub",
+      "status": "connected",
+      "keywords": [
+        "github", "repo", "repository", "houseofhades", "commit", "push",
+        "branch", "issue", "issues", "pull request", "pr", "label", "template",
+        "code", "file in repo", "docs/", "yaml", "clone", "execution board"
+      ],
+      "capabilities": [
+        "repo.read", "repo.modify", "issue.create", "issue.update",
+        "issue.close", "label.manage", "project.board"
+      ],
+      "default_lane": "execution"
+    },
+    "notion": {
+      "display": "Notion",
+      "status": "connected",
+      "keywords": [
+        "notion", "continuity", "signal log", "treasury", "headquarters",
+        "hq", "vault", "watchlist", "database", "memory", "scroll library",
+        "content calendar", "roadmap", "academy", "pp system", "underworld"
+      ],
+      "capabilities": [
+        "knowledge.retrieve", "knowledge.write", "db.query", "db.update",
+        "page.create", "page.update"
+      ],
+      "default_lane": "memory"
+    },
+    "linear": {
+      "display": "Linear",
+      "status": "connected_optional",
+      "keywords": [
+        "linear", "sprint", "cycle", "linear issue", "linear project"
+      ],
+      "capabilities": ["task.manage", "project.track"],
+      "default_lane": "execution",
+      "note": "HADES primary execution is GitHub Issues + Projects, not Linear."
+    },
+    "automations": {
+      "display": "Automations",
+      "status": "connected",
+      "keywords": [
+        "reminder", "remind me", "schedule", "every two days", "cron",
+        "automation", "recurring"
+      ],
+      "capabilities": ["reminder.create", "schedule.prompt"],
+      "default_lane": "ops"
+    },
+    "calendar": {
+      "display": "Google Calendar",
+      "status": "connected",
+      "keywords": ["calendar", "meeting", "event", "appointment"],
+      "capabilities": ["time.read", "time.write"],
+      "default_lane": "ops"
+    },
+    "gmail": {
+      "display": "Gmail",
+      "status": "connected",
+      "keywords": ["email", "gmail", "inbox", "send mail"],
+      "capabilities": ["comms.read", "comms.send"],
+      "default_lane": "ops"
+    },
+    "drive": {
+      "display": "Google Drive",
+      "status": "connected",
+      "keywords": ["drive", "google doc", "spreadsheet file", "upload file"],
+      "capabilities": ["files.read", "files.write"],
+      "default_lane": "ops"
+    },
+    "voice": {
+      "display": "Voice",
+      "status": "connected",
+      "keywords": ["voice", "speak", "tts", "audio narrate"],
+      "capabilities": ["audio.speak"],
+      "default_lane": "content"
+    },
+    "todoist": {
+      "display": "Todoist",
+      "status": "not_connected",
+      "keywords": ["todoist", "todo list app"],
+      "capabilities": ["task.manage"],
+      "default_lane": "ops",
+      "note": "Not connected. Prefer GitHub Issues or Notion Tasks Tracker."
+    },
+    "web": {
+      "display": "Web / Market data",
+      "status": "built_in",
+      "keywords": [
+        "market today", "price", "news", "search web", "how is the market",
+        "nfp", "cpi", "fomc", "stock news"
+      ],
+      "capabilities": ["market.brief", "web.search"],
+      "default_lane": "research"
+    }
+  },
+  "capabilities": {
+    "repo.modify": { "tool": "github", "examples": ["commit", "push files", "update README"] },
+    "repo.read": { "tool": "github", "examples": ["read file from repo", "list issues"] },
+    "issue.create": { "tool": "github", "examples": ["open github issue", "seed issues"] },
+    "issue.update": { "tool": "github", "examples": ["close issue", "mark done on github"] },
+    "knowledge.retrieve": { "tool": "notion", "examples": ["what does continuity say", "fetch signal log"] },
+    "knowledge.write": { "tool": "notion", "examples": ["log to continuity", "update treasury", "add signal"] },
+    "db.query": { "tool": "notion", "examples": ["search notion database"] },
+    "db.update": { "tool": "notion", "examples": ["update signal log row"] },
+    "task.manage": { "tool": "github", "fallback": ["notion", "linear"], "examples": ["todo", "task"] },
+    "reminder.create": { "tool": "automations", "examples": ["remind me in 2 weeks"] },
+    "market.brief": { "tool": "web", "also": ["notion"], "examples": ["how is the market today"] },
+    "comms.read": { "tool": "gmail" },
+    "time.read": { "tool": "calendar" },
+    "files.read": { "tool": "drive" },
+    "audio.speak": { "tool": "voice" }
+  }
+}
