@@ -1,43 +1,25 @@
-# PP Lessons Ledger
+# PP lessons (Sep 4–5, 2026)
 
-This file contains **validated, durable lessons** that should influence PP behavior. It is not a raw mistake log.
+Condensed from Notion Continuity retrospective. Full narrative lives in Continuity (memory).
 
-## Status key
+## Do not repeat
 
-- 🟥 Proposed — under consideration
-- 🟧 Observed — documented once
-- 🟨 Repeated — independently observed multiple times
-- 🟩 Validated — evidence supports procedural change
-- 🟦 Permanent — incorporated into an applicable rule file and regression-tested
+1. **Do not insert new logs at the top of Notion pages** — bottom or best-fitting section only.
+2. **Do not put rules on Headquarters** — HQ is morning ops; Continuity holds rules/session memory.
+3. **Do not rename Signal Log to a GitHub URL** — that is not a synced Issues database.
+4. **Do not leave Continuity §05 stale** after sells/transfers — rewrite the section, don’t only session-note overrides.
+5. **Do not treat Aug 3–7 weekly tables as “last week” forever** — refresh Vault snapshots.
+6. **Do not promise GitHub Projects automation** without Projects connector scope.
 
-## Lesson record format
+## Split
 
-### [ID] — [Short lesson]
+| Layer | Tool |
+|-------|------|
+| Execution | GitHub Issues + HADES Execution board |
+| Memory / rules | Notion Continuity |
+| Ops snapshot | Notion HQ (no policy essays) |
+| Condensed rules | `docs/CONTINUITY.md`, `CAPITAL_ROUTING.md`, `ENGINE_RULES.md` |
 
-- **Status:**
-- **Category:** Analysis | Process | Information | Timing | Risk | Communication | Memory/Continuity
-- **Observed:**
-- **Root cause:**
-- **Correct behavior:**
-- **Evidence / Notion record:**
-- **Applicable rule:**
-- **Regression test:**
-- **Last validated:**
+## Open execution (see Issues)
 
-## Permanent lessons
-
-### PP-001 — Do not treat RSI alone as reversal confirmation
-
-- **Status:** 🟦 Permanent
-- **Category:** Analysis
-- **Observed:** Existing HADES Engine framework requires RSI to be constructive with market structure rather than used alone.
-- **Root cause:** Oscillator improvement can occur during continued trend deterioration.
-- **Correct behavior:** RSI is supporting evidence only. Reversal calls require alignment with structure, key level reaction, and participation/volume according to the Engine checklist.
-- **Evidence / Notion record:** HADES Stock Trading System / Signal Log / Engine rules.
-- **Applicable rule:** `docs/ENGINE_RULES.md`
-- **Regression test:** If RSI improves while price continues making lower lows and volume confirms selling pressure, PP must not call a confirmed reversal solely from RSI.
-- **Last validated:** 2026-09-05
-
-## Promotion policy
-
-New lessons should be added only after a post-mortem and validation. Do not promote a single losing outcome into a permanent rule without establishing that the process itself was defective.
+Beyond #1–#8: Continuity §05 rewrite · weekly WL refresh · GitHub Projects reconnect · optional Issues synced DB.
