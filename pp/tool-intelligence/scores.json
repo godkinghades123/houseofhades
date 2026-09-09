@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-09",
+  "description": "Quantified routing policy for PP. Update after repeated outcomes. Success rate is approximate until enough samples.",
+  "routes": {
+    "repo.modify": {
+      "preferred": ["github"],
+      "success_rate": 0.95,
+      "avg_attempts": 1.1,
+      "samples": 12,
+      "last_failure": null,
+      "known_fix": "Confirm repo access and branch before push",
+      "notes": "Primary execution path for House of Hades"
+    },
+    "knowledge.write": {
+      "preferred": ["notion"],
+      "success_rate": 0.92,
+      "avg_attempts": 1.2,
+      "samples": 20,
+      "last_failure": "Wrong page target (HQ vs Continuity)",
+      "known_fix": "Continuity/Signal Log/Treasury for memory; HQ only for ops snapshot",
+      "notes": "PP-ROUTE-002"
+    },
+    "knowledge.retrieve": {
+      "preferred": ["notion"],
+      "success_rate": 0.94,
+      "avg_attempts": 1.1,
+      "samples": 25,
+      "last_failure": null,
+      "known_fix": null,
+      "notes": "Always prefer Notion for rules and live state"
+    },
+    "issue.create": {
+      "preferred": ["github"],
+      "success_rate": 0.90,
+      "avg_attempts": 1.3,
+      "samples": 8,
+      "last_failure": null,
+      "known_fix": "Use issue templates under .github/ISSUE_TEMPLATE",
+      "notes": "Execution board lives on GitHub"
+    },
+    "reminder.create": {
+      "preferred": ["automations"],
+      "success_rate": 0.88,
+      "avg_attempts": 1.4,
+      "samples": 5,
+      "last_failure": "Tried Todoist (not connected)",
+      "known_fix": "Never route to Todoist; use Automations",
+      "notes": "PP-ROUTE-004"
+    },
+    "market.brief": {
+      "preferred": ["web", "notion"],
+      "success_rate": 0.85,
+      "avg_attempts": 1.5,
+      "samples": 6,
+      "last_failure": null,
+      "known_fix": "Web for news + Notion Vault/Signal Log for context",
+      "notes": "PP-ROUTE-005"
+    },
+    "issue+notion.link": {
+      "preferred": ["github", "notion"],
+      "success_rate": 0.87,
+      "avg_attempts": 1.6,
+      "samples": 4,
+      "last_failure": null,
+      "known_fix": "GitHub first (create issue), then Notion link/note",
+      "notes": "PP-ROUTE-003"
+    }
+  },
+  "policy": {
+    "min_samples_for_strong_preference": 5,
+    "prefer_higher_success_when_close": true,
+    "always_apply_known_fix": true,
+    "do_not_override_hard_rules": true
+  }
+}

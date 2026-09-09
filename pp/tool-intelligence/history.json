@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-09",
+  "description": "Append-style log of recent PP tool-route outcomes. Keep newest entries at the top. Cap practical length; promote systemic issues to LESSONS + Notion Learning Records.",
+  "entries": [
+    {
+      "id": "H-2026-09-09-001",
+      "date": "2026-09-09",
+      "request_summary": "Implement tool-intelligence layer + Notion backup",
+      "routed_to": ["github", "notion"],
+      "level": 2,
+      "outcome": "success",
+      "attempts": 1,
+      "notes": "Bootstrap of scores/history structure"
+    }
+  ]
+}
