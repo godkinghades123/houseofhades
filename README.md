@@ -12,23 +12,30 @@ Personal operating system for disciplined trading, capital routing, and long-ter
 |-------|------|------|
 | **Ship work** | Issues + **HADES Execution** Project | Tasks, status, close when done |
 | **Memory / OS** | Notion HADES | Continuity, Treasury, Signal Log, HQ, Academy |
-| **Bridge** | PP + **Tool Router** | Route → load only needed tools; update the right system |
+| **Bridge** | PP + **Tool Router** + **Tool Intelligence** | Route → check scores/lessons → load only needed tools |
 
 **Rule:** Strategy and capital rules live in Notion. Day-to-day *do this next* lives here. Do not duplicate full Continuity into the Project board.
 
 - **Issues:** https://github.com/godkinghades123/houseofhades/issues  
 - **New issue (templates):** https://github.com/godkinghades123/houseofhades/issues/new/choose  
 - **Notion HQ:** [HADES Headquarters](https://www.notion.so/c55194f27bfe4bc78b3ad12cb23bd22f)  
-- **Full Continuity:** [Master Continuity Document](https://www.notion.so/ba677e71574a46e2a7656c2453b92f80)
+- **Full Continuity:** [Master Continuity Document](https://www.notion.so/ba677e71574a46e2a7656c2453b92f80)  
+- **PP Learning + Architecture backup:** under Notion **PP Learning System**
 
-## PP Tool Router (permanent)
-
-Cheap deterministic tool selection before loading schemas:
+## PP as agent (not only chatbot)
 
 ```text
-pp/tool-router/   registry.json · aliases.json · router.py
-docs/TOOL_ROUTING.md
+Request → Router → scores + lessons → Execute → Self-check → Log
 ```
+
+| Component | Path |
+|-----------|------|
+| Task Router | `pp/tool-router/` (`registry.json`, `aliases.json`, `router.py`) |
+| Tool Intelligence | `pp/tool-intelligence/` (`scores.json`, `history.json`, `benchmarks.md`) |
+| Learning stubs | `pp/learning/` |
+| Architecture doc | `docs/PP_AGENT_ARCHITECTURE.md` |
+| Routing policy | `docs/TOOL_ROUTING.md` |
+| Learning loop | `docs/PP_LEARNING.md` + Notion PP Learning Records |
 
 ```bash
 python pp/tool-router/router.py "Update Signal Log with this trade"
@@ -44,9 +51,10 @@ See [`docs/TOOL_ROUTING.md`](docs/TOOL_ROUTING.md) and [`docs/LESSONS.md`](docs/
 | [`docs/CONTINUITY.md`](docs/CONTINUITY.md) | Brand, content rules, trust, PP identity |
 | [`docs/CAPITAL_ROUTING.md`](docs/CAPITAL_ROUTING.md) | Engine vs Core, bank floors, allocation |
 | [`docs/ENGINE_RULES.md`](docs/ENGINE_RULES.md) | Risk, checklist, options, journal |
-| [`docs/TOOL_ROUTING.md`](docs/TOOL_ROUTING.md) | Tool search / capability routing |
+| [`docs/TOOL_ROUTING.md`](docs/TOOL_ROUTING.md) | Tool search / capability routing + scores |
 | [`docs/LESSONS.md`](docs/LESSONS.md) | PP mistakes + routing regression tests |
 | [`docs/PP_LEARNING.md`](docs/PP_LEARNING.md) | Learning system |
+| [`docs/PP_AGENT_ARCHITECTURE.md`](docs/PP_AGENT_ARCHITECTURE.md) | Agent diagram + implementation map |
 
 Update these when **rules** change. Live balances and signals stay in Notion.
 
