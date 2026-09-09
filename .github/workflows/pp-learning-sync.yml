@@ -1,0 +1,51 @@
+name: PP Learning Sync
+# Pulls new/edited rows from the Notion "PP Learning Records" database and
+# opens a single PR against docs/PP_LEARNING.md and docs/LESSONS.md.
+on:
+  schedule:
+    # Runs daily at 09:00 UTC. Adjust to taste (crontab.guru).
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}   # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run PP Learning sync
+        id: sync
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python scripts/sync_pp_learning.py
+
+      - name: Open PR with any changes
+        if: steps.sync.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: pp-sync/${{ github.run_id }}
+          commit-message: "PP sync: mirror new/edited learning records"
+          title: "PP Learning Sync — ${{ steps.sync.outputs.entry_count }} record(s)"
+          body: ${{ steps.sync.outputs.pr_body }}
+          add-paths: |
+            docs/PP_LEARNING.md
+            docs/LESSONS.md
+            scripts/.pp_sync_state.json
+          delete-branch: true
