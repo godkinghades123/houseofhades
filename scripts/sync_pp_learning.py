@@ -1,285 +1,250 @@
 #!/usr/bin/env python3
 """
-PP Learning Sync — Notion → GitHub docs mirror.
+Sync new/edited rows from the Notion "PP Learning Records" database into
+House of Hades:
+  - docs/LESSONS.md      <- every row touched since the last run (full log)
+  - docs/PP_LEARNING.md  <- only rows whose Status is "Validated" or
+                            "Permanent" (the durable-rule mirror)
 
-Reads the Notion database set by NOTION_DATABASE_ID (PP Learning Records),
-appends new/changed entries into docs/LESSONS.md (Synced from Notion section),
-and records state in scripts/.pp_sync_state.json so the same page is not
-duplicated forever.
+State (the timestamp of the last successful run) is kept in
+scripts/.pp_sync_state.json so each run only pulls what's new. On first run
+(no state file), it looks back 7 days.
 
-GitHub Actions sets:
-  steps.sync.outputs.has_changes
-  steps.sync.outputs.entry_count
-  steps.sync.outputs.pr_body
+Required env vars:
+  NOTION_API_KEY      - Notion internal integration token, shared with the
+                         PP Learning Records database
+  NOTION_DATABASE_ID  - the database (data source) ID for PP Learning Records
 
-Requires:
-  NOTION_API_KEY      — Notion integration secret
-  NOTION_DATABASE_ID  — database id (32-char hex, with or without dashes)
+When run inside GitHub Actions, writes has_changes / entry_count / pr_body
+to $GITHUB_OUTPUT so the workflow can decide whether to open a PR.
 """
-
-from __future__ import annotations
 
 import json
 import os
-import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
 
-ROOT = Path(__file__).resolve().parents[1]
-LESSONS = ROOT / "docs" / "LESSONS.md"
-PP_LEARNING = ROOT / "docs" / "PP_LEARNING.md"
-STATE_PATH = ROOT / "scripts" / ".pp_sync_state.json"
+NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
+NOTION_DATABASE_ID = os.environ.get("NOTION_DATABASE_ID")
 NOTION_VERSION = "2022-06-28"
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+STATE_FILE = Path(__file__).resolve().parent / ".pp_sync_state.json"
+LESSONS_FILE = REPO_ROOT / "docs" / "LESSONS.md"
+PP_LEARNING_FILE = REPO_ROOT / "docs" / "PP_LEARNING.md"
 
-def gh_output(name: str, value: str) -> None:
-    """Write a workflow step output (multiline-safe)."""
-    out = os.environ.get("GITHUB_OUTPUT")
-    if not out:
-        print(f"::notice::{name}={value[:200]}")
-        return
-    # multiline delimiter
-    if "\n" in value:
-        delim = "EOF_PP_SYNC"
-        with open(out, "a", encoding="utf-8") as f:
-            f.write(f"{name}<<{delim}\n{value}\n{delim}\n")
-    else:
-        with open(out, "a", encoding="utf-8") as f:
-            f.write(f"{name}={value}\n")
+DURABLE_STATUSES = {"Validated", "Permanent"}
 
 
-def load_state() -> dict:
-    if STATE_PATH.exists():
-        return json.loads(STATE_PATH.read_text(encoding="utf-8"))
-    return {"pages": {}}
+def die(msg: str) -> None:
+    print(f"ERROR: {msg}", file=sys.stderr)
+    sys.exit(1)
 
 
-def save_state(state: dict) -> None:
-    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-    STATE_PATH.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+def load_last_run() -> str:
+    if STATE_FILE.exists():
+        data = json.loads(STATE_FILE.read_text())
+        return data["last_run"]
+    # First run: look back 7 days rather than pulling the entire history.
+    fallback = datetime.now(timezone.utc) - timedelta(days=7)
+    return fallback.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
-def notion_headers(token: str) -> dict:
-    return {
-        "Authorization": f"Bearer {token}",
+def save_state(run_started_at: str) -> None:
+    STATE_FILE.write_text(json.dumps({"last_run": run_started_at}, indent=2) + "\n")
+
+
+def query_notion(since_iso: str) -> list[dict]:
+    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
+    headers = {
+        "Authorization": f"Bearer {NOTION_API_KEY}",
         "Notion-Version": NOTION_VERSION,
         "Content-Type": "application/json",
     }
-
-
-def normalize_db_id(raw: str) -> str:
-    h = re.sub(r"[^0-9a-fA-F]", "", raw)
-    if len(h) != 32:
-        return raw.strip()
-    return f"{h[0:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:32]}"
-
-
-def plain_rich(prop: dict | None) -> str:
-    if not prop:
-        return ""
-    t = prop.get("type")
-    if t == "title":
-        return "".join(x.get("plain_text", "") for x in prop.get("title", []))
-    if t == "rich_text":
-        return "".join(x.get("plain_text", "") for x in prop.get("rich_text", []))
-    if t == "select":
-        sel = prop.get("select")
-        return (sel or {}).get("name", "") if sel else ""
-    if t == "multi_select":
-        return ", ".join(x.get("name", "") for x in prop.get("multi_select", []))
-    if t == "status":
-        st = prop.get("status")
-        return (st or {}).get("name", "") if st else ""
-    if t == "url":
-        return prop.get("url") or ""
-    if t == "date":
-        d = prop.get("date") or {}
-        return d.get("start") or ""
-    if t == "number":
-        n = prop.get("number")
-        return "" if n is None else str(n)
-    if t == "checkbox":
-        return "yes" if prop.get("checkbox") else "no"
-    return ""
-
-
-def query_all(db_id: str, token: str) -> list[dict]:
-    url = f"https://api.notion.com/v1/databases/{db_id}/query"
-    results: list[dict] = []
-    cursor = None
+    payload = {
+        "filter": {
+            "timestamp": "last_edited_time",
+            "last_edited_time": {"after": since_iso},
+        },
+        "sorts": [{"timestamp": "created_time", "direction": "ascending"}],
+        "page_size": 100,
+    }
+    results = []
     while True:
-        body: dict = {"page_size": 100}
-        if cursor:
-            body["start_cursor"] = cursor
-        r = requests.post(url, headers=notion_headers(token), json=body, timeout=60)
-        if r.status_code == 404:
-            # try without reformatting
-            raise SystemExit(
-                f"Notion database not found (404). Check NOTION_DATABASE_ID and "
-                f"that the integration is shared on the database. body={r.text[:300]}"
-            )
-        r.raise_for_status()
-        data = r.json()
+        resp = requests.post(url, headers=headers, json=payload, timeout=30)
+        if resp.status_code != 200:
+            die(f"Notion API error {resp.status_code}: {resp.text}")
+        data = resp.json()
         results.extend(data.get("results", []))
         if not data.get("has_more"):
             break
-        cursor = data.get("next_cursor")
+        payload["start_cursor"] = data["next_cursor"]
     return results
 
 
-def page_snapshot(page: dict) -> dict:
-    props = page.get("properties") or {}
-    # Flexible property names — match common PP Learning fields
-    def first(*names: str) -> str:
-        lower = {k.lower(): k for k in props}
-        for n in names:
-            k = lower.get(n.lower())
-            if k:
-                return plain_rich(props[k])
-        # fallback: any title
-        for k, v in props.items():
-            if v.get("type") == "title":
-                return plain_rich(v)
-        return page.get("id", "")
+# --- Notion property helpers -------------------------------------------------
 
+def prop_title(props: dict, name: str) -> str:
+    parts = props.get(name, {}).get("title", [])
+    return "".join(p.get("plain_text", "") for p in parts).strip()
+
+
+def prop_rich_text(props: dict, name: str) -> str:
+    parts = props.get(name, {}).get("rich_text", [])
+    return "".join(p.get("plain_text", "") for p in parts).strip()
+
+
+def prop_select(props: dict, name: str) -> str:
+    sel = props.get(name, {}).get("select")
+    return sel["name"] if sel else ""
+
+
+def prop_date(props: dict, name: str) -> str:
+    d = props.get(name, {}).get("date")
+    return d["start"] if d else ""
+
+
+def prop_checkbox(props: dict, name: str) -> bool:
+    return bool(props.get(name, {}).get("checkbox", False))
+
+
+def prop_url(props: dict, name: str) -> str:
+    return props.get(name, {}).get("url") or ""
+
+
+def parse_row(page: dict) -> dict:
+    props = page["properties"]
     return {
-        "id": page.get("id", ""),
-        "url": page.get("url", ""),
-        "last_edited": page.get("last_edited_time", ""),
-        "title": first("Name", "Title", "Signal", "Lesson", "Summary"),
-        "category": first("Category", "Type", "Class"),
-        "status": first("Status", "Level", "Validation"),
-        "root_cause": first("Root Cause", "Root cause", "Cause"),
-        "correction": first("Correction", "Fix", "Rule"),
-        "notes": first("Notes", "Description", "Thesis", "Body"),
+        "name": prop_title(props, "Name"),
+        "date": prop_date(props, "Date"),
+        "status": prop_select(props, "Status"),
+        "category": prop_select(props, "Category"),
+        "severity": prop_select(props, "Severity"),
+        "recurrence": prop_checkbox(props, "Recurrence"),
+        "root_cause": prop_rich_text(props, "Root Cause"),
+        "correction": prop_rich_text(props, "Correction"),
+        "regression_test": prop_rich_text(props, "Regression Test"),
+        "signal_log_link": prop_url(props, "Signal Log Link"),
+        "github_issue": prop_url(props, "GitHub Issue"),
+        "notion_url": page.get("url", ""),
     }
 
 
-def format_block(entry: dict) -> str:
-    lines = [
-        f"### {entry['title'] or entry['id']}",
-        f"- **Notion id:** `{entry['id']}`",
-        f"- **Edited:** {entry['last_edited']}",
-    ]
-    if entry.get("url"):
-        lines.append(f"- **URL:** {entry['url']}")
-    if entry.get("category"):
-        lines.append(f"- **Category:** {entry['category']}")
-    if entry.get("status"):
-        lines.append(f"- **Status:** {entry['status']}")
-    if entry.get("root_cause"):
-        lines.append(f"- **Root cause:** {entry['root_cause']}")
-    if entry.get("correction"):
-        lines.append(f"- **Correction:** {entry['correction']}")
-    if entry.get("notes"):
-        lines.append(f"- **Notes:** {entry['notes']}")
+# --- Markdown rendering ------------------------------------------------------
+
+def render_lesson_entry(row: dict) -> str:
+    lines = [f"### {row['name'] or '(untitled)'}"]
+    meta = []
+    if row["date"]:
+        meta.append(f"**Date:** {row['date']}")
+    if row["status"]:
+        meta.append(f"**Status:** {row['status']}")
+    if row["category"]:
+        meta.append(f"**Category:** {row['category']}")
+    if row["severity"]:
+        meta.append(f"**Severity:** {row['severity']}")
+    if row["recurrence"]:
+        meta.append("**Recurrence:** yes")
+    if meta:
+        lines.append(" · ".join(meta))
+    if row["root_cause"]:
+        lines.append(f"- **Root cause:** {row['root_cause']}")
+    if row["correction"]:
+        lines.append(f"- **Correction:** {row['correction']}")
+    if row["regression_test"]:
+        lines.append(f"- **Regression test:** {row['regression_test']}")
+    links = []
+    if row["signal_log_link"]:
+        links.append(f"[Signal Log]({row['signal_log_link']})")
+    if row["github_issue"]:
+        links.append(f"[GitHub Issue]({row['github_issue']})")
+    if row["notion_url"]:
+        links.append(f"[Notion record]({row['notion_url']})")
+    if links:
+        lines.append(f"- **Links:** {' · '.join(links)}")
     lines.append("")
     return "\n".join(lines)
 
 
-def ensure_section(md: str, heading: str) -> str:
-    if heading in md:
-        return md
-    return md.rstrip() + f"\n\n{heading}\n\n_Synced automatically from Notion PP Learning Records._\n\n"
+def render_rule_entry(row: dict) -> str:
+    lines = [f"### {row['name'] or '(untitled)'}"]
+    if row["correction"]:
+        lines.append(row["correction"])
+    elif row["root_cause"]:
+        lines.append(row["root_cause"])
+    if row["category"]:
+        lines.append(f"_Category: {row['category']}_")
+    lines.append(f"_Source: [Notion record]({row['notion_url']})_")
+    lines.append("")
+    return "\n".join(lines)
 
 
-def upsert_blocks(md: str, heading: str, blocks: list[tuple[str, str]]) -> str:
-    """Replace or append blocks keyed by Notion id under heading."""
-    md = ensure_section(md, heading)
-    for page_id, block in blocks:
-        marker = f"`{page_id}`"
-        # remove old block for this id if present (simple heuristic)
-        pattern = re.compile(
-            rf"### .*?\n(?:- \*\*.*?\n)*?- \*\*Notion id:\*\* `{re.escape(page_id)}`\n(?:- \*\*.*?\n)*\n",
-            re.MULTILINE,
-        )
-        md = pattern.sub("", md)
-        # append under section
-        if heading in md:
-            parts = md.split(heading, 1)
-            md = parts[0] + heading + parts[1].rstrip() + "\n\n" + block + "\n"
-        else:
-            md = md + "\n" + block
-    return md
+def append_section(path: Path, heading: str, body: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    existing = path.read_text() if path.exists() else f"# {path.stem}\n\n"
+    if not existing.endswith("\n\n"):
+        existing = existing.rstrip("\n") + "\n\n"
+    existing += f"## {heading}\n\n{body}"
+    path.write_text(existing)
 
 
-def main() -> int:
-    token = os.environ.get("NOTION_API_KEY", "").strip()
-    db_raw = os.environ.get("NOTION_DATABASE_ID", "").strip()
+def set_output(name: str, value: str) -> None:
+    gh_out = os.environ.get("GITHUB_OUTPUT")
+    if not gh_out:
+        return
+    # Multiline-safe GitHub Actions output format.
+    delim = "PP_SYNC_EOF"
+    with open(gh_out, "a") as f:
+        f.write(f"{name}<<{delim}\n{value}\n{delim}\n")
 
-    if not token or not db_raw:
-        print("NOTION_API_KEY and NOTION_DATABASE_ID are required.", file=sys.stderr)
-        gh_output("has_changes", "false")
-        gh_output("entry_count", "0")
-        gh_output("pr_body", "Missing Notion secrets — sync skipped.")
-        return 1
 
-    db_id = normalize_db_id(db_raw)
-    state = load_state()
-    pages_state: dict = state.setdefault("pages", {})
+def main() -> None:
+    if not NOTION_API_KEY or not NOTION_DATABASE_ID:
+        die("NOTION_API_KEY and NOTION_DATABASE_ID must be set")
 
-    try:
-        raw_pages = query_all(db_id, token)
-    except requests.HTTPError as e:
-        print(f"Notion query failed: {e} {getattr(e.response, 'text', '')[:400]}", file=sys.stderr)
-        gh_output("has_changes", "false")
-        gh_output("entry_count", "0")
-        gh_output("pr_body", f"Notion query failed: {e}")
-        return 1
+    run_started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    since_iso = load_last_run()
+    pages = query_notion(since_iso)
 
-    changed: list[dict] = []
-    for page in raw_pages:
-        snap = page_snapshot(page)
-        pid = snap["id"]
-        prev = pages_state.get(pid)
-        if prev and prev.get("last_edited") == snap["last_edited"]:
-            continue
-        changed.append(snap)
-        pages_state[pid] = {
-            "last_edited": snap["last_edited"],
-            "title": snap["title"],
-        }
+    if not pages:
+        print("No new or edited PP Learning records since last run.")
+        save_state(run_started_at)
+        set_output("has_changes", "false")
+        set_output("entry_count", "0")
+        return
 
-    if not changed:
-        print("No new/edited learning records.")
-        gh_output("has_changes", "false")
-        gh_output("entry_count", "0")
-        gh_output("pr_body", "No Notion learning records changed since last sync.")
-        return 0
+    rows = [parse_row(p) for p in pages]
+    batch_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
-    lessons = LESSONS.read_text(encoding="utf-8") if LESSONS.exists() else "# PP lessons\n"
-    heading = "## Synced from Notion (PP Learning Records)"
-    blocks = [(c["id"], format_block(c)) for c in changed]
-    lessons = upsert_blocks(lessons, heading, blocks)
-    LESSONS.write_text(lessons if lessons.endswith("\n") else lessons + "\n", encoding="utf-8")
+    lessons_body = "\n".join(render_lesson_entry(r) for r in rows)
+    append_section(LESSONS_FILE, f"Sync batch — {batch_date}", lessons_body)
 
-    # Light touch on PP_LEARNING.md — stamp last sync only
-    if PP_LEARNING.exists():
-        stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-        text = PP_LEARNING.read_text(encoding="utf-8")
-        line = f"\n\n<!-- last_pp_learning_sync: {stamp} | records_touched: {len(changed)} -->\n"
-        text = re.sub(r"\n<!-- last_pp_learning_sync:.*?-->\n", "\n", text)
-        PP_LEARNING.write_text(text.rstrip() + line, encoding="utf-8")
+    durable_rows = [r for r in rows if r["status"] in DURABLE_STATUSES]
+    if durable_rows:
+        rules_body = "\n".join(render_rule_entry(r) for r in durable_rows)
+        append_section(PP_LEARNING_FILE, f"Sync batch — {batch_date}", rules_body)
 
-    state["last_sync"] = datetime.now(timezone.utc).isoformat()
-    save_state(state)
+    save_state(run_started_at)
 
-    titles = ", ".join((c["title"] or c["id"][:8]) for c in changed[:10])
-    pr_body = (
-        f"Automated PP Learning Sync mirrored **{len(changed)}** new/edited Notion record(s).\n\n"
-        f"Titles: {titles}\n\n"
-        f"Source database: `{db_id}`\n"
-        f"Review before merge. Notion remains memory; GitHub holds durable lesson mirrors."
+    pr_body_lines = [
+        f"Automated PP Learning sync — {len(rows)} record(s) touched since {since_iso}.",
+        "",
+        f"- Logged to `docs/LESSONS.md`: {len(rows)}",
+        f"- Promoted to `docs/PP_LEARNING.md` (Validated/Permanent): {len(durable_rows)}",
+        "",
+        "Review before merging — this mirrors Notion, it doesn't validate the rules.",
+    ]
+    set_output("has_changes", "true")
+    set_output("entry_count", str(len(rows)))
+    set_output("pr_body", "\n".join(pr_body_lines))
+
+    print(
+        f"Synced {len(rows)} record(s), {len(durable_rows)} promoted to PP_LEARNING.md."
     )
-    gh_output("has_changes", "true")
-    gh_output("entry_count", str(len(changed)))
-    gh_output("pr_body", pr_body)
-    print(f"Synced {len(changed)} record(s).")
-    return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
