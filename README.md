@@ -13,6 +13,7 @@ Personal operating system for disciplined trading, capital routing, and long-ter
 | **Ship work** | Issues + **HADES Execution** Project | Tasks, status, close when done |
 | **Memory / OS** | Notion HADES | Continuity, Treasury, Signal Log, HQ, Academy |
 | **Bridge** | PP + **Tool Router** + **Tool Intelligence** | Route → check scores/lessons → load only needed tools |
+| **Ops UI** | [`dashboard/`](dashboard/) | Atlanta map + positions, signals, watchlists, PP tasks |
 
 **Rule:** Strategy and capital rules live in Notion. Day-to-day *do this next* lives here. Do not duplicate full Continuity into the Project board.
 
@@ -21,6 +22,18 @@ Personal operating system for disciplined trading, capital routing, and long-ter
 - **Notion HQ:** [HADES Headquarters](https://www.notion.so/c55194f27bfe4bc78b3ad12cb23bd22f)  
 - **Full Continuity:** [Master Continuity Document](https://www.notion.so/ba677e71574a46e2a7656c2453b92f80)  
 - **PP Learning + Architecture backup:** under Notion **PP Learning System**
+
+## HADES Ops Dashboard
+
+Dark operational interface with Atlanta-centered map for trading/ops monitoring and PP task tracking.
+
+```bash
+cd dashboard
+npm install
+npm run dev
+```
+
+See [`dashboard/README.md`](dashboard/README.md) for details.
 
 ## PP as agent (not only chatbot)
 
