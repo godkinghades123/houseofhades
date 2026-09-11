@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: #0b0d17;
+}
+
+/* Leaflet dark tweaks */
+.leaflet-container {
+  background: #0b0d17 !important;
+  font-family: inherit;
+}
+
+.leaflet-control-attribution {
+  background: rgba(11, 13, 23, 0.8) !important;
+  color: #64748b !important;
+}
