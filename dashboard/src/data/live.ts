@@ -1,35 +1,20 @@
 /**
- * Live Stage 1 snapshot — last synced from Notion Headquarters + GitHub Issues
- * Synced: 2026-09-11 (PP)
+ * Ops Map live layer.
+ * - Markers (map pins) live here and stay curated.
+ * - KPIs / cash / issues come from synced_meta.json (PP sync or GitHub Action).
  */
 
 import type { KPI, MapMarker, TableRow } from './mock'
+import synced from './synced_meta.json'
 
-export const LAST_SYNCED = '2026-09-11T01:30:00-04:00'
+export const LAST_SYNCED = synced.syncedAt
 
-export const engine = {
-  netLiq: 287,
-  phase: 1 as const,
-  ytd: 'red',
-  maxLossPct: 3,
-  optionsBuyingPower: 110,
-  rule: 'Defined-risk options only',
-}
+export const engine = synced.engine
+export const cash = synced.cash
 
-export const cash = {
-  chime: 10,
-  keybank: 65,
-  keybankFloor: { min: 700, target: 2000 },
-  fidelityGo: 80,
-  groundfloor: 30.11,
-}
-
-export const liveKpis: KPI[] = [
-  { label: 'Engine Net Liq', value: `$${engine.netLiq}`, change: 'Phase 1', tone: 'neutral' },
-  { label: 'KeyBank Build', value: `$${cash.keybank}`, change: `Floor $${cash.keybankFloor.min}`, tone: 'neutral' },
-  { label: 'Open Issues', value: '9', change: '2 high', tone: 'neutral' },
-  { label: 'Watchlists', value: '36', change: 'stable', tone: 'positive' },
-]
+export const liveKpis = synced.kpis as KPI[]
+export const liveTableRows = synced.tableRows as TableRow[]
+export const openIssueLinks = synced.openIssueLinks
 
 export const liveMarkers: MapMarker[] = [
   {
@@ -62,7 +47,7 @@ export const liveMarkers: MapMarker[] = [
     lat: 33.730,
     lng: -84.410,
     status: 'alert',
-    meta: 'Brent > $100 · 10y ~4.9%',
+    meta: 'Brent > $100 · 10y ~4.9% · CPI watch Sep 11',
     priority: 'high',
     owner: 'PP',
     sector: 'oil',
@@ -123,7 +108,7 @@ export const liveMarkers: MapMarker[] = [
     lat: 33.780,
     lng: -84.400,
     status: 'pending',
-    meta: 'Tool Intelligence',
+    meta: 'Needs NOTION_API_KEY secrets',
     priority: 'low',
     owner: 'PP',
   },
@@ -142,32 +127,9 @@ export const liveMarkers: MapMarker[] = [
   },
 ]
 
-export const liveTableRows: TableRow[] = [
-  { id: 'i5', name: 'Trust notarization (Stage 1 blocker)', type: 'Task', status: 'Open', owner: 'Javarous', updated: 'Sep 4', priority: 'high' },
-  { id: 'i3', name: 'Hit weekly water profit target toward rent', type: 'Task', status: 'Open', owner: 'Javarous', updated: 'Sep 4', priority: 'high' },
-  { id: 'i8', name: 'Stage 1 content cadence — ship next posts', type: 'Task', status: 'Open', owner: 'PP / Javarous', updated: 'Sep 4', priority: 'medium' },
-  { id: 'i6', name: 'VICI 2-week watch review', type: 'Signal', status: 'Open', owner: 'PP', updated: 'Sep 4', priority: 'medium' },
-  { id: 'i7', name: 'Journal HIMS + CMCSA vs entry thesis', type: 'Signal', status: 'Open', owner: 'PP', updated: 'Sep 4', priority: 'medium' },
-  { id: 'i10', name: 'Weekly watchlist net-change refresh', type: 'Watchlist', status: 'Open', owner: 'PP', updated: 'Sep 5', priority: 'medium' },
-  { id: 'i9', name: 'Refresh Continuity §05 portfolio to live truth', type: 'Task', status: 'Open', owner: 'PP', updated: 'Sep 5', priority: 'low' },
-  { id: 'eng', name: 'Engine Phase 1 risk discipline', type: 'Position', status: 'Active', owner: 'PP', updated: 'Live', priority: 'high' },
-]
-
-export const openIssueLinks = [
-  { number: 5, title: 'Trust notarization (Stage 1 blocker)', url: 'https://github.com/godkinghades123/houseofhades/issues/5' },
-  { number: 3, title: 'Hit weekly water profit target toward rent', url: 'https://github.com/godkinghades123/houseofhades/issues/3' },
-  { number: 8, title: 'Stage 1 content cadence — ship next posts', url: 'https://github.com/godkinghades123/houseofhades/issues/8' },
-  { number: 6, title: 'VICI 2-week watch review', url: 'https://github.com/godkinghades123/houseofhades/issues/6' },
-  { number: 7, title: 'Journal HIMS + CMCSA vs entry thesis', url: 'https://github.com/godkinghades123/houseofhades/issues/7' },
-  { number: 10, title: 'Weekly watchlist net-change refresh', url: 'https://github.com/godkinghades123/houseofhades/issues/10' },
-  { number: 9, title: 'Refresh Continuity §05 portfolio to live truth', url: 'https://github.com/godkinghades123/houseofhades/issues/9' },
-]
-
-/** Apply Ops Map filter id to marker list */
 export function filterMarkers(markers: MapMarker[], filter: string): MapMarker[] {
   if (!filter || filter === 'all') return markers
 
-  // Type filters (legacy)
   if (['position', 'signal', 'watchlist', 'task', 'pp'].includes(filter)) {
     return markers.filter((m) => m.type === filter)
   }
@@ -198,7 +160,11 @@ export function filterMarkers(markers: MapMarker[], filter: string): MapMarker[]
 
   if (filter.startsWith('severity:')) {
     const sev = filter.slice('severity:'.length)
-    return markers.filter((m) => m.type === 'signal' && (m.severity === sev || (sev === 'alert' && m.status === 'alert')))
+    return markers.filter(
+      (m) =>
+        m.type === 'signal' &&
+        (m.severity === sev || (sev === 'alert' && m.status === 'alert'))
+    )
   }
 
   return markers
