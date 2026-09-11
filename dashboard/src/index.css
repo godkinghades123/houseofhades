@@ -18,3 +18,29 @@ html, body, #root {
   background: rgba(11, 13, 23, 0.8) !important;
   color: #64748b !important;
 }
+
+/* System map — animated flow dashes */
+.flow-dash {
+  animation: flow-move 1.2s linear infinite;
+}
+
+@keyframes flow-move {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.hub-pulse {
+  animation: hub-pulse 2.4s ease-out infinite;
+}
+
+@keyframes hub-pulse {
+  0% {
+    r: 28;
+    opacity: 0.55;
+  }
+  100% {
+    r: 48;
+    opacity: 0;
+  }
+}

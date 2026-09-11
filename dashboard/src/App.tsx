@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { MapView } from './components/MapView'
+import { SystemMap } from './components/SystemMap'
 import { Sidebar } from './components/Sidebar'
 import { KPIBar } from './components/KPIBar'
 import { DataTable } from './components/DataTable'
 import { liveKpis, liveMarkers, liveTableRows, LAST_SYNCED } from './data/live'
 import { INTEGRATION_STATUS } from './services/integrations'
 
+type ViewMode = 'ops' | 'system'
+
 export default function App() {
   const [selected, setSelected] = useState<string | null>(null)
   const [filter, setFilter] = useState<string>('all')
+  const [view, setView] = useState<ViewMode>('system')
 
   const filteredMarkers = filter === 'all'
     ? liveMarkers
@@ -26,6 +30,30 @@ export default function App() {
           <div className="w-7 h-7 rounded bg-hades-accent flex items-center justify-center text-xs font-bold">H</div>
           <span className="font-semibold tracking-wide">HADES Ops</span>
           <span className="text-hades-muted text-xs">· Atlanta</span>
+
+          {/* View toggle */}
+          <div className="ml-4 flex rounded-md border border-hades-border overflow-hidden text-xs">
+            <button
+              onClick={() => { setView('system'); setSelected(null) }}
+              className={`px-3 py-1 transition ${
+                view === 'system'
+                  ? 'bg-hades-accent text-white'
+                  : 'bg-transparent text-hades-muted hover:text-white'
+              }`}
+            >
+              System Map
+            </button>
+            <button
+              onClick={() => { setView('ops'); setSelected(null) }}
+              className={`px-3 py-1 transition ${
+                view === 'ops'
+                  ? 'bg-hades-accent text-white'
+                  : 'bg-transparent text-hades-muted hover:text-white'
+              }`}
+            >
+              Ops Map
+            </button>
+          </div>
         </div>
         <div className="flex items-center gap-4 text-xs text-hades-muted">
           <span>Synced {syncLabel}</span>
@@ -36,30 +64,36 @@ export default function App() {
         </div>
       </header>
 
-      {/* KPI strip — live Stage 1 numbers */}
       <KPIBar items={liveKpis} />
 
-      {/* Main content */}
       <div className="flex-1 flex overflow-hidden">
-        <Sidebar filter={filter} onFilterChange={setFilter} />
+        {view === 'ops' && (
+          <Sidebar filter={filter} onFilterChange={setFilter} />
+        )}
 
         <div className="flex-1 flex flex-col min-w-0">
           <div className="flex-1 relative">
-            <MapView
-              markers={filteredMarkers}
-              selected={selected}
-              onSelect={setSelected}
-            />
+            {view === 'system' ? (
+              <SystemMap selected={selected} onSelect={setSelected} />
+            ) : (
+              <MapView
+                markers={filteredMarkers}
+                selected={selected}
+                onSelect={setSelected}
+              />
+            )}
           </div>
 
-          <div className="h-56 border-t border-hades-border bg-hades-panel">
-            <DataTable rows={liveTableRows} selected={selected} onSelect={setSelected} />
-          </div>
+          {view === 'ops' && (
+            <div className="h-56 border-t border-hades-border bg-hades-panel">
+              <DataTable rows={liveTableRows} selected={selected} onSelect={setSelected} />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Tiny integration status footer */}
       <div className="h-6 border-t border-hades-border bg-hades-panel/80 flex items-center px-3 text-[10px] text-hades-muted gap-4">
+        <span>View: {view === 'system' ? 'Page flow' : 'Atlanta ops'}</span>
         <span>Notion: {INTEGRATION_STATUS.notion}</span>
         <span>Engine: {INTEGRATION_STATUS.engine}</span>
         <span>GitHub Issues: {INTEGRATION_STATUS.github}</span>
