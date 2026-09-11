@@ -17,6 +17,24 @@ npm run dev
 
 Open http://localhost:5173
 
+## Current data source (live Stage 1)
+
+Data is pulled from:
+- **Notion Headquarters** → Engine Net Liq, cash floors, Trust status
+- **GitHub Issues** → open PP / execution tasks
+
+Source of truth file: `src/data/live.ts`  
+Last synced: **2026-09-11**
+
+| KPI | Value |
+|-----|-------|
+| Engine Net Liq | ~$287 (Phase 1) |
+| KeyBank | ~$65 (floor $700) |
+| Open Issues | 9 |
+| Watchlists | 36 |
+
+Integration contracts live in `src/services/integrations.ts`.
+
 ## Stack
 
 - Vite + React + TypeScript
@@ -25,22 +43,35 @@ Open http://localhost:5173
 - Recharts
 - Lucide icons
 
-## Current mock data
+## How live updates work right now
 
-Markers and table rows are seeded with real Stage 1 concepts:
-- Engine Phase 1
-- Watchlist 8 (AI)
-- Oil / yields signal
-- Trust notarization task
-- KeyBank build floor
-- PP Learning / Tool Intelligence
+1. PP fetches Headquarters + open GitHub Issues
+2. Rewrites `src/data/live.ts` with current numbers and tasks
+3. Dashboard reads from `live.ts`
 
-Replace `src/data/mock.ts` with live Notion / Engine feeds later.
+This keeps the UI honest to Stage 1 without requiring API keys yet.
 
-## Next upgrades
+## Next (full live)
 
-- Connect to Notion (Watchtower, Signal Log, Headquarters)
-- Live Engine Net Liq via broker API or manual snapshot
-- Real-time PP task feed from GitHub Issues
-- Filter + search persistence
-- Mobile responsive refinement
+- [ ] Notion API or server proxy for Headquarters / Watchtower / Signal Log
+- [ ] GitHub Issues live list (already structured)
+- [ ] Optional Tastytrade / manual Engine snapshot endpoint
+- [ ] Auto-refresh button that calls the integration layer
+
+## Structure
+
+```
+dashboard/
+  src/
+    data/
+      mock.ts      # types + original seed
+      live.ts      # current Stage 1 snapshot (use this)
+    services/
+      integrations.ts  # contracts for Notion / Engine / GitHub
+    components/
+      MapView.tsx
+      Sidebar.tsx
+      KPIBar.tsx
+      DataTable.tsx
+    App.tsx
+```

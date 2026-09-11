@@ -1,5 +1,6 @@
 import { Activity, Filter, Radio, List, Bot, MapPin } from 'lucide-react'
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
+import { engine, cash } from '../data/live'
 
 const chartData = [
   { name: 'Mon', v: 12 },
@@ -39,8 +40,8 @@ export function Sidebar({ filter, onFilterChange }: Props) {
                 key={f.id}
                 onClick={() => onFilterChange(f.id)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs transition ${
-                  active 
-                    ? 'bg-hades-accent text-white' 
+                  active
+                    ? 'bg-hades-accent text-white'
                     : 'bg-hades-border/50 text-hades-muted hover:bg-hades-border'
                 }`}
               >
@@ -65,7 +66,7 @@ export function Sidebar({ filter, onFilterChange }: Props) {
               </defs>
               <XAxis dataKey="name" hide />
               <YAxis hide />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ background: '#12141f', border: '1px solid #1e2130', fontSize: 11 }}
               />
               <Area type="monotone" dataKey="v" stroke="#7c3aed" fill="url(#signalGrad)" strokeWidth={2} />
@@ -75,19 +76,23 @@ export function Sidebar({ filter, onFilterChange }: Props) {
       </div>
 
       <div className="p-4 space-y-3">
-        <h2 className="text-xs uppercase tracking-wider text-hades-muted">Quick Status</h2>
+        <h2 className="text-xs uppercase tracking-wider text-hades-muted">Live Stage 1 Status</h2>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-hades-muted">Engine Phase</span>
-            <span className="text-hades-cyan">1 · Defined Risk</span>
+            <span className="text-hades-cyan">{engine.phase} · Defined Risk</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-hades-muted">Net Liq</span>
+            <span>${engine.netLiq}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-hades-muted">KeyBank</span>
+            <span className="text-hades-amber">${cash.keybank} / ${cash.keybankFloor.min}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-hades-muted">Trust Status</span>
             <span className="text-hades-amber">Not Notarized</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-hades-muted">KeyBank Floor</span>
-            <span>Building</span>
           </div>
           <div className="flex justify-between">
             <span className="text-hades-muted">PP Router</span>
@@ -98,7 +103,7 @@ export function Sidebar({ filter, onFilterChange }: Props) {
 
       <div className="mt-auto p-4 border-t border-hades-border text-[10px] text-hades-muted">
         House of Hades · Stage 1<br />
-        Atlanta Command
+        Atlanta Command · Truth over hype
       </div>
     </aside>
   )
