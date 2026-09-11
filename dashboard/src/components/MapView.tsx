@@ -1,18 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet'
-import L from 'leaflet'
+import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet'
 import { ATLANTA_CENTER, type MapMarker } from '../data/mock'
-
-// Fix default marker icons in Vite
-import icon from 'leaflet/dist/images/marker-icon.png'
-import iconShadow from 'leaflet/dist/images/marker-shadow.png'
-
-const DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-})
-L.Marker.prototype.options.icon = DefaultIcon
 
 const colorMap: Record<string, string> = {
   position: '#22d3ee',
