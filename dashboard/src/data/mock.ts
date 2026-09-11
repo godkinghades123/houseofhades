@@ -1,5 +1,19 @@
 export type MarkerType = 'position' | 'signal' | 'watchlist' | 'task' | 'pp'
 
+export type Priority = 'high' | 'medium' | 'low'
+export type Owner = 'Javarous' | 'PP' | 'both'
+export type CadenceSlot = 'tip' | 'edu' | 'phil' | 'blueprint'
+export type WatchSector =
+  | 'oil'
+  | 'ai'
+  | 'income'
+  | 'semis'
+  | 'defense'
+  | 'reits'
+  | 'nuclear'
+  | 'general'
+export type SignalSeverity = 'normal' | 'alert' | 'critical'
+
 export interface MapMarker {
   id: string
   name: string
@@ -8,6 +22,16 @@ export interface MapMarker {
   lng: number
   status: 'active' | 'pending' | 'closed' | 'alert'
   meta?: string
+  priority?: Priority
+  owner?: Owner
+  /** Stage 1 critical path (Trust, KeyBank floor, water/rent) */
+  stage1Blocker?: boolean
+  /** Content cadence slot when relevant */
+  cadence?: CadenceSlot
+  /** Vault-aligned sector for watchlists / related signals */
+  sector?: WatchSector
+  /** Signal pressure level */
+  severity?: SignalSeverity
 }
 
 export interface KPI {
@@ -24,21 +48,20 @@ export interface TableRow {
   status: string
   owner: string
   updated: string
-  priority: 'high' | 'medium' | 'low'
+  priority: Priority
 }
 
-// Atlanta metro focus
 export const ATLANTA_CENTER = { lat: 33.749, lng: -84.388 }
 
 export const markers: MapMarker[] = [
-  { id: 'm1', name: 'Engine Phase 1', type: 'position', lat: 33.755, lng: -84.390, status: 'active', meta: 'Defined-risk only' },
-  { id: 'm2', name: 'Watchlist 8 — AI', type: 'watchlist', lat: 33.770, lng: -84.365, status: 'active', meta: 'NVDA / PLTR / FTNT' },
-  { id: 'm3', name: 'Oil Majors Signal', type: 'signal', lat: 33.730, lng: -84.410, status: 'alert', meta: 'Brent > $100' },
-  { id: 'm4', name: 'PP Learning Sync', type: 'pp', lat: 33.780, lng: -84.400, status: 'pending', meta: 'Tool Intelligence' },
-  { id: 'm5', name: 'Trust Notarization', type: 'task', lat: 33.740, lng: -84.370, status: 'pending', meta: 'Highest priority' },
-  { id: 'm6', name: 'KeyBank Build Floor', type: 'task', lat: 33.760, lng: -84.420, status: 'active', meta: '$700–$2k target' },
-  { id: 'm7', name: 'Signal Log Update', type: 'signal', lat: 33.720, lng: -84.350, status: 'active', meta: 'Weekly net-change' },
-  { id: 'm8', name: 'Content Cadence', type: 'task', lat: 33.790, lng: -84.380, status: 'active', meta: 'Philosophy slot' },
+  { id: 'm1', name: 'Engine Phase 1', type: 'position', lat: 33.755, lng: -84.390, status: 'active', meta: 'Defined-risk only', priority: 'high', owner: 'PP' },
+  { id: 'm2', name: 'Watchlist 8 — AI', type: 'watchlist', lat: 33.770, lng: -84.365, status: 'active', meta: 'NVDA / PLTR / FTNT', priority: 'medium', owner: 'PP', sector: 'ai' },
+  { id: 'm3', name: 'Oil Majors Signal', type: 'signal', lat: 33.730, lng: -84.410, status: 'alert', meta: 'Brent > $100', priority: 'high', owner: 'PP', sector: 'oil', severity: 'alert' },
+  { id: 'm4', name: 'PP Learning Sync', type: 'pp', lat: 33.780, lng: -84.400, status: 'pending', meta: 'Tool Intelligence', priority: 'low', owner: 'PP' },
+  { id: 'm5', name: 'Trust Notarization', type: 'task', lat: 33.740, lng: -84.370, status: 'pending', meta: 'Highest priority', priority: 'high', owner: 'Javarous', stage1Blocker: true },
+  { id: 'm6', name: 'KeyBank Build Floor', type: 'task', lat: 33.760, lng: -84.420, status: 'active', meta: '$700–$2k target', priority: 'high', owner: 'Javarous', stage1Blocker: true },
+  { id: 'm7', name: 'Signal Log Update', type: 'signal', lat: 33.720, lng: -84.350, status: 'active', meta: 'Weekly net-change', priority: 'medium', owner: 'PP', severity: 'normal' },
+  { id: 'm8', name: 'Content Cadence', type: 'task', lat: 33.790, lng: -84.380, status: 'active', meta: 'Philosophy slot', priority: 'medium', owner: 'both', cadence: 'phil' },
 ]
 
 export const kpis: KPI[] = [

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MapView } from './components/MapView'
 import { SystemMap } from './components/SystemMap'
 import { Sidebar } from './components/Sidebar'
 import { KPIBar } from './components/KPIBar'
 import { DataTable } from './components/DataTable'
-import { liveKpis, liveMarkers, liveTableRows, LAST_SYNCED } from './data/live'
+import { liveKpis, liveMarkers, liveTableRows, LAST_SYNCED, filterMarkers } from './data/live'
 import { INTEGRATION_STATUS } from './services/integrations'
 
 type ViewMode = 'ops' | 'system'
@@ -14,9 +14,10 @@ export default function App() {
   const [filter, setFilter] = useState<string>('all')
   const [view, setView] = useState<ViewMode>('system')
 
-  const filteredMarkers = filter === 'all'
-    ? liveMarkers
-    : liveMarkers.filter(m => m.type === filter)
+  const filteredMarkers = useMemo(
+    () => filterMarkers(liveMarkers, filter),
+    [filter]
+  )
 
   const syncLabel = new Date(LAST_SYNCED).toLocaleString('en-US', {
     month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
@@ -66,7 +67,6 @@ export default function App() {
         <KPIBar items={liveKpis} />
       </div>
 
-      {/* min-h-0 is required so flex child can scroll */}
       <div className="flex-1 flex min-h-0 overflow-hidden">
         {view === 'ops' && (
           <Sidebar filter={filter} onFilterChange={setFilter} />
@@ -95,6 +95,9 @@ export default function App() {
 
       <div className="h-6 shrink-0 border-t border-hades-border bg-hades-panel/80 flex items-center px-3 text-[10px] text-hades-muted gap-4">
         <span>View: {view === 'system' ? 'Page flow' : 'Atlanta ops'}</span>
+        {view === 'ops' && filter !== 'all' && (
+          <span className="text-hades-cyan">Filter: {filter}</span>
+        )}
         <span>Notion: {INTEGRATION_STATUS.notion}</span>
         <span>Engine: {INTEGRATION_STATUS.engine}</span>
         <span>GitHub Issues: {INTEGRATION_STATUS.github}</span>
