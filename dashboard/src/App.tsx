@@ -24,14 +24,12 @@ export default function App() {
 
   return (
     <div className="h-screen flex flex-col bg-hades-bg text-white overflow-hidden">
-      {/* Top bar */}
-      <header className="h-12 border-b border-hades-border flex items-center justify-between px-4 bg-hades-panel/80 backdrop-blur z-20">
+      <header className="h-12 shrink-0 border-b border-hades-border flex items-center justify-between px-4 bg-hades-panel/80 backdrop-blur z-20">
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 rounded bg-hades-accent flex items-center justify-center text-xs font-bold">H</div>
           <span className="font-semibold tracking-wide">HADES Ops</span>
           <span className="text-hades-muted text-xs">· Atlanta</span>
 
-          {/* View toggle */}
           <div className="ml-4 flex rounded-md border border-hades-border overflow-hidden text-xs">
             <button
               onClick={() => { setView('system'); setSelected(null) }}
@@ -64,15 +62,18 @@ export default function App() {
         </div>
       </header>
 
-      <KPIBar items={liveKpis} />
+      <div className="shrink-0">
+        <KPIBar items={liveKpis} />
+      </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      {/* min-h-0 is required so flex child can scroll */}
+      <div className="flex-1 flex min-h-0 overflow-hidden">
         {view === 'ops' && (
           <Sidebar filter={filter} onFilterChange={setFilter} />
         )}
 
-        <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex-1 relative">
+        <div className="flex-1 flex flex-col min-w-0 min-h-0">
+          <div className="flex-1 relative min-h-0 overflow-hidden">
             {view === 'system' ? (
               <SystemMap selected={selected} onSelect={setSelected} />
             ) : (
@@ -85,14 +86,14 @@ export default function App() {
           </div>
 
           {view === 'ops' && (
-            <div className="h-56 border-t border-hades-border bg-hades-panel">
+            <div className="h-56 shrink-0 border-t border-hades-border bg-hades-panel overflow-auto">
               <DataTable rows={liveTableRows} selected={selected} onSelect={setSelected} />
             </div>
           )}
         </div>
       </div>
 
-      <div className="h-6 border-t border-hades-border bg-hades-panel/80 flex items-center px-3 text-[10px] text-hades-muted gap-4">
+      <div className="h-6 shrink-0 border-t border-hades-border bg-hades-panel/80 flex items-center px-3 text-[10px] text-hades-muted gap-4">
         <span>View: {view === 'system' ? 'Page flow' : 'Atlanta ops'}</span>
         <span>Notion: {INTEGRATION_STATUS.notion}</span>
         <span>Engine: {INTEGRATION_STATUS.engine}</span>
