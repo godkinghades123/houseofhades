@@ -1,15 +1,5 @@
 import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
-import { engine, cash } from '../data/live'
-
-const chartData = [
-  { name: 'Mon', v: 12 },
-  { name: 'Tue', v: 18 },
-  { name: 'Wed', v: 15 },
-  { name: 'Thu', v: 22 },
-  { name: 'Fri', v: 19 },
-  { name: 'Sat', v: 14 },
-  { name: 'Sun', v: 17 },
-]
+import { engine, cash, trustNotarized, signalActivity7d } from '../data/live'
 
 interface Props {
   filter: string
@@ -52,6 +42,7 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 
 export function Sidebar({ filter, onFilterChange }: Props) {
   const set = onFilterChange
+  const hasSignalFeed = signalActivity7d.length > 0
 
   return (
     <aside className="w-72 border-r border-hades-border bg-hades-panel flex flex-col overflow-y-auto shrink-0">
@@ -108,24 +99,30 @@ export function Sidebar({ filter, onFilterChange }: Props) {
 
       <div className="p-4 border-b border-hades-border">
         <h2 className="text-xs uppercase tracking-wider text-hades-muted mb-3">Signal Activity (7d)</h2>
-        <div className="h-28">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData}>
-              <defs>
-                <linearGradient id="signalGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" hide />
-              <YAxis hide />
-              <Tooltip
-                contentStyle={{ background: '#12141f', border: '1px solid #1e2130', fontSize: 11 }}
-              />
-              <Area type="monotone" dataKey="v" stroke="#7c3aed" fill="url(#signalGrad)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        {hasSignalFeed ? (
+          <div className="h-28">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={signalActivity7d}>
+                <defs>
+                  <linearGradient id="signalGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="name" hide />
+                <YAxis hide />
+                <Tooltip
+                  contentStyle={{ background: '#12141f', border: '1px solid #1e2130', fontSize: 11 }}
+                />
+                <Area type="monotone" dataKey="v" stroke="#7c3aed" fill="url(#signalGrad)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <p className="text-[11px] text-hades-muted leading-relaxed py-2">
+            No live signal feed yet. Chart stays empty until Signal Log sync is wired — Truth over fake data.
+          </p>
+        )}
       </div>
 
       <div className="p-4 space-y-3">
@@ -145,7 +142,9 @@ export function Sidebar({ filter, onFilterChange }: Props) {
           </div>
           <div className="flex justify-between">
             <span className="text-hades-muted">Trust Status</span>
-            <span className="text-hades-amber">Not Notarized</span>
+            <span className={trustNotarized ? 'text-hades-green' : 'text-hades-amber'}>
+              {trustNotarized ? 'Notarized' : 'Not Notarized'}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-hades-muted">PP Router</span>
