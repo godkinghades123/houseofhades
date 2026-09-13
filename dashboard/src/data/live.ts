@@ -11,10 +11,31 @@ export const LAST_SYNCED = synced.syncedAt
 
 export const engine = synced.engine
 export const cash = synced.cash
+export const trustNotarized = Boolean(synced.trustNotarized)
 
 export const liveKpis = synced.kpis as KPI[]
-export const liveTableRows = synced.tableRows as TableRow[]
-export const openIssueLinks = synced.openIssueLinks
+export const openIssueLinks = synced.openIssueLinks as {
+  number: number
+  title: string
+  url: string
+}[]
+
+/** Map table row id (e.g. i5) → GitHub issue URL */
+const issueUrlById = new Map<string, string>()
+for (const link of openIssueLinks) {
+  issueUrlById.set(`i${link.number}`, link.url)
+}
+
+export const liveTableRows: TableRow[] = (synced.tableRows as TableRow[]).map((row) => ({
+  ...row,
+  issueUrl: issueUrlById.get(row.id),
+}))
+
+/** No live signal-count feed yet — chart stays empty until Signal Log sync exists */
+export const signalActivity7d: { name: string; v: number }[] = []
+
+export const OPS_MAP_SYNC_URL =
+  'https://github.com/godkinghades123/houseofhades/actions/workflows/ops-map-sync.yml'
 
 export const liveMarkers: MapMarker[] = [
   {
