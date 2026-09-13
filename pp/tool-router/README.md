@@ -36,10 +36,15 @@ CAPABILITY          TOOL         EXAMPLE
 repo.modify      →  GitHub    →  push files / commit
 knowledge.write  →  Notion    →  Continuity / Signal Log
 knowledge.retrieve → Notion   →  fetch rules / treasury
+db.query / data_source.query → Notion (query-data-source)
 issue.create     →  GitHub    →  new execution issue
 market.brief     →  Web+Notion→  briefing rule
 reminder.create  →  Automations
 ```
+
+## Notion MCP ≥ 2.0.0
+
+Old database tools are gone. Use data-source tools only. Full map + parameter changes: [`docs/NOTION_MCP_V2.md`](../../docs/NOTION_MCP_V2.md).
 
 ## CLI
 
