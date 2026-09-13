@@ -33,9 +33,21 @@ USER → PP CORE → TOOL ROUTER (fast) → scores + lessons check → GitHub | 
 | Capability | Tool |
 |------------|------|
 | repo.modify / issue.* | GitHub |
-| knowledge.* / db.* | Notion |
+| knowledge.* / db.* / data_source.* | Notion |
 | market.brief | Web + Notion |
 | reminder.create | Automations |
+
+## Notion MCP v2.0.0 (data sources)
+
+As of MCP server ≥ 2.0.0 the old database tools are **removed**:
+
+| Removed (v1)          | Use instead              |
+|-----------------------|--------------------------|
+| `post-database-query` | `query-data-source`      |
+| `update-a-database`   | `update-a-data-source`   |
+| `create-a-database`   | `create-a-data-source`   |
+
+Always pass `data_source_id` (not `database_id`) for query/update. If only a database_id is known, call `retrieve-a-database` first to obtain the data source ID(s). Full map: [`docs/NOTION_MCP_V2.md`](NOTION_MCP_V2.md).
 
 ## Tool Intelligence (scores)
 
