@@ -49,6 +49,8 @@ export interface TableRow {
   owner: string
   updated: string
   priority: Priority
+  /** GitHub issue URL when row maps to an open issue */
+  issueUrl?: string
 }
 
 export const ATLANTA_CENTER = { lat: 33.749, lng: -84.388 }
