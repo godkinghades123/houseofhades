@@ -1,0 +1,14 @@
+{
+  "rent": 600,
+  "food": 250,
+  "chime": 40,
+  "keybank": 65,
+  "keybank_floor_min": 700,
+  "keybank_floor_target": 2000,
+  "water_sales_weekly": 50,
+  "amazon_hours_week": 20,
+  "amazon_rate": 18.50,
+  "debt_min_payments": 0,
+  "collector_pressure": "medium",
+  "notes": "Stage 1 defaults — replace with live numbers locally"
+}
