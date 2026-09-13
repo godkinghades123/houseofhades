@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "updated": "2026-09-05",
+  "version": "1.1.0",
+  "updated": "2026-09-12",
   "description": "PP cheap capability index. Route first; load only matched tools.",
   "split_rule": {
     "github": "execution",
@@ -32,14 +32,16 @@
       "status": "connected",
       "keywords": [
         "notion", "continuity", "signal log", "treasury", "headquarters",
-        "hq", "vault", "watchlist", "database", "memory", "scroll library",
-        "content calendar", "roadmap", "academy", "pp system", "underworld"
+        "hq", "vault", "watchlist", "database", "data source", "data_source",
+        "memory", "scroll library", "content calendar", "roadmap", "academy",
+        "pp system", "underworld"
       ],
       "capabilities": [
         "knowledge.retrieve", "knowledge.write", "db.query", "db.update",
-        "page.create", "page.update"
+        "page.create", "page.update", "data_source.query", "data_source.update"
       ],
-      "default_lane": "memory"
+      "default_lane": "memory",
+      "note": "MCP v2.0.0: use data_source_* tools. See docs/NOTION_MCP_V2.md. Old post-database-query / update-a-database / create-a-database are removed."
     },
     "linear": {
       "display": "Linear",
@@ -115,8 +117,10 @@
     "issue.update": { "tool": "github", "examples": ["close issue", "mark done on github"] },
     "knowledge.retrieve": { "tool": "notion", "examples": ["what does continuity say", "fetch signal log"] },
     "knowledge.write": { "tool": "notion", "examples": ["log to continuity", "update treasury", "add signal"] },
-    "db.query": { "tool": "notion", "examples": ["search notion database"] },
-    "db.update": { "tool": "notion", "examples": ["update signal log row"] },
+    "db.query": { "tool": "notion", "mcp_tool": "query-data-source", "examples": ["search notion database", "query data source"] },
+    "db.update": { "tool": "notion", "mcp_tool": "update-a-data-source", "examples": ["update signal log row", "update data source"] },
+    "data_source.query": { "tool": "notion", "mcp_tool": "query-data-source", "examples": ["query data source"] },
+    "data_source.update": { "tool": "notion", "mcp_tool": "update-a-data-source", "examples": ["update data source properties"] },
     "task.manage": { "tool": "github", "fallback": ["notion", "linear"], "examples": ["todo", "task"] },
     "reminder.create": { "tool": "automations", "examples": ["remind me in 2 weeks"] },
     "market.brief": { "tool": "web", "also": ["notion"], "examples": ["how is the market today"] },
