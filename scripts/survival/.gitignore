@@ -1,0 +1,4 @@
+# Local only — never commit personal numbers or contact logs
+collector_log.jsonl
+state.json
+*.local.json
