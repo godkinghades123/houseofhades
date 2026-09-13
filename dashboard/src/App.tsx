@@ -5,7 +5,14 @@ import { AgentOsView } from './components/AgentOsView'
 import { Sidebar } from './components/Sidebar'
 import { KPIBar } from './components/KPIBar'
 import { DataTable } from './components/DataTable'
-import { liveKpis, liveMarkers, liveTableRows, LAST_SYNCED, filterMarkers } from './data/live'
+import {
+  liveKpis,
+  liveMarkers,
+  liveTableRows,
+  LAST_SYNCED,
+  OPS_MAP_SYNC_URL,
+  filterMarkers,
+} from './data/live'
 import { INTEGRATION_STATUS } from './services/integrations'
 
 type ViewMode = 'ops' | 'system' | 'agent'
@@ -58,7 +65,17 @@ export default function App() {
           </div>
         </div>
         <div className="flex items-center gap-4 text-xs text-hades-muted shrink-0">
-          <span>Synced {syncLabel}</span>
+          <span>
+            Synced {syncLabel}{' '}
+            <a
+              href={OPS_MAP_SYNC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-hades-cyan hover:underline ml-1"
+            >
+              Run sync →
+            </a>
+          </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-hades-green animate-pulse" />
             PP Online
