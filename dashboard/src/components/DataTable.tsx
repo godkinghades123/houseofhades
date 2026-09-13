@@ -35,7 +35,21 @@ export function DataTable({ rows, selected, onSelect }: Props) {
                 selected === row.id ? 'bg-hades-accent/10' : ''
               }`}
             >
-              <td className="px-4 py-2.5 font-medium">{row.name}</td>
+              <td className="px-4 py-2.5 font-medium">
+                {row.issueUrl ? (
+                  <a
+                    href={row.issueUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-hades-cyan hover:underline"
+                  >
+                    {row.name}
+                  </a>
+                ) : (
+                  row.name
+                )}
+              </td>
               <td className="px-3 py-2.5 text-hades-muted">{row.type}</td>
               <td className="px-3 py-2.5">{row.status}</td>
               <td className="px-3 py-2.5 text-hades-muted">{row.owner}</td>
