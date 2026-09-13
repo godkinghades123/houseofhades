@@ -1,5 +1,23 @@
 # scripts/
 
+## Survival toolkit (`scripts/survival/`)
+
+Stage 1 operating tools — **not legal advice**.
+
+| Script | Purpose |
+|--------|---------|
+| `stop_the_bleed_triage.py` | Rank cash leaks, prioritize next action |
+| `debt_collector_scripts.py` | Response templates + local contact log |
+
+```bash
+python scripts/survival/stop_the_bleed_triage.py
+python scripts/survival/debt_collector_scripts.py list
+```
+
+See [`survival/README.md`](survival/README.md).
+
+---
+
 ## `sync_pp_learning.py`
 
 Used by [`.github/workflows/pp-learning-sync.yml`](../.github/workflows/pp-learning-sync.yml).
