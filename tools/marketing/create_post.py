@@ -1,80 +1,71 @@
-#!/usr/bin/env python3
 """
-Create / schedule a Buffer post for HADES Marketing agent.
+create_post.py
+---------------
+Creates (or drafts) a Buffer post for HADES / House of Hades content.
 
-Enforces:
-  - pillar + highlight required
-  - caption must contain #HADES and #hadesmarkets
-  - without --approved → always saveToDraft (cannot go live)
+HARD RULES ENFORCED BY THIS SCRIPT (do not bypass these — they exist because
+the brand's own standard says "if it can't be assigned, it doesn't go up"):
 
-Usage examples:
-  python tools/marketing/create_post.py \\
-    --platform instagram \\
-    --pillar "Market Commentary" \\
-    --highlight "MARKET TIPS" \\
-    --text-file drafts/tip.txt \\
-    --mode queue
+  1. --pillar and --highlight are REQUIRED. Content with no pillar/highlight
+     assignment cannot be created, even as a draft.
 
-  # After human review:
-  ... same args ... --approved
+  2. The caption text must contain the mandatory hashtag close: #HADES #hadesmarkets
+
+  3. Nothing goes LIVE (queued or scheduled) without --approved.
+     Without --approved, the post is always created as a Buffer DRAFT
+     (saveToDraft: true) regardless of --mode, so a human always reviews
+     before it can publish.
+
+  4. Every run is appended to approval_log.jsonl for an audit trail —
+     who/what/when, never the Buffer token itself.
+
+Usage:
+    python tools/marketing/create_post.py \\
+        --platform instagram \\
+        --pillar "Market Commentary" \\
+        --highlight "MARKET TIPS" \\
+        --text-file caption.txt \\
+        --mode queue \\
+        --approved
+
+Platforms map to channel IDs via env vars (see list_channels.py):
+    BUFFER_CHANNEL_INSTAGRAM
+    BUFFER_CHANNEL_X
+    BUFFER_CHANNEL_TIKTOK
 """
 
-from __future__ import annotations
-
-import argparse
-import json
 import os
 import sys
-from datetime import datetime, timezone
-from pathlib import Path
+import json
+import argparse
+import datetime
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+from buffer_client import graphql_request, eprint, BufferAPIError
 
-from buffer_client import BufferAPIError, eprint, graphql_request
+VALID_PILLARS = {"Chart Education", "Hades Philosophy", "Market Commentary"}
 
-# --- HADES content rules ---
-ALLOWED_PILLARS = {
-    "Chart Education",
-    "Hades Philosophy",
-    "Market Commentary",
+VALID_HIGHLIGHTS = {
+    "START HERE", "WINS", "LESSONS", "REVERSALS", "WATCHLIST",
+    "MINDSET", "ASK YOURSELF", "JOURNEY", "MARKET TIPS", "THE BLUEPRINT",
 }
 
-ALLOWED_HIGHLIGHTS = {
-    "START HERE",
-    "WINS",
-    "LESSONS",
-    "REVERSALS",
-    "WATCHLIST",
-    "MINDSET",
-    "ASK YOURSELF",
-    "JOURNEY",
-    "MARKET TIPS",
-    "THE BLUEPRINT",
-}
+MANDATORY_HASHTAGS = ["#HADES", "#hadesmarkets"]
 
-PLATFORM_ENV = {
+CHANNEL_ENV_MAP = {
     "instagram": "BUFFER_CHANNEL_INSTAGRAM",
     "x": "BUFFER_CHANNEL_X",
-    "twitter": "BUFFER_CHANNEL_X",
     "tiktok": "BUFFER_CHANNEL_TIKTOK",
 }
 
-MODE_MAP = {
-    "queue": "addToQueue",
-    "now": "shareNow",
-    "schedule": "customScheduled",
-}
-
-CREATE_MUTATION = """
+CREATE_POST_MUTATION = """
 mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     ... on PostActionSuccess {
       post {
         id
         text
-        status
         dueAt
-        channelId
+        status
       }
     }
     ... on MutationError {
@@ -84,193 +75,116 @@ mutation CreatePost($input: CreatePostInput!) {
 }
 """
 
-LOG_PATH = Path(__file__).resolve().parent / "approval_log.jsonl"
+LOG_PATH = os.path.join(os.path.dirname(__file__), "approval_log.jsonl")
 
 
-def die(msg: str, code: int = 1) -> None:
-    eprint(f"error: {msg}")
-    sys.exit(code)
-
-
-def append_log(entry: dict) -> None:
-    entry = dict(entry)
-    entry["ts"] = datetime.now(timezone.utc).isoformat()
-    for key in list(entry.keys()):
-        if "token" in key.lower() or "secret" in key.lower() or "bearer" in key.lower():
-            entry.pop(key, None)
-    with LOG_PATH.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
-
-
-def resolve_channel_id(platform: str, explicit: str | None) -> str:
-    if explicit:
-        return explicit.strip()
-    env_key = PLATFORM_ENV.get(platform.lower())
-    if not env_key:
-        die(f"Unknown platform '{platform}'. Use: instagram, x, twitter, tiktok")
-    cid = os.environ.get(env_key, "").strip()
-    if not cid:
-        die(
-            f"No channel id for {platform}. Set {env_key} or pass --channel-id. "
-            f"Run list_channels.py first."
+def resolve_channel_id(platform: str, explicit_id: str | None) -> str:
+    if explicit_id:
+        return explicit_id
+    env_var = CHANNEL_ENV_MAP.get(platform)
+    channel_id = os.environ.get(env_var) if env_var else None
+    if not channel_id:
+        raise SystemExit(
+            f"No channel id for '{platform}'. Set {env_var} (run list_channels.py "
+            f"to find it) or pass --channel-id."
         )
-    return cid
+    return channel_id
 
 
-def load_text(args: argparse.Namespace) -> str:
+def validate_content(pillar: str, highlight: str, text: str):
+    errors = []
+    if pillar not in VALID_PILLARS:
+        errors.append(f"--pillar must be one of {sorted(VALID_PILLARS)}")
+    if highlight not in VALID_HIGHLIGHTS:
+        errors.append(f"--highlight must be one of {sorted(VALID_HIGHLIGHTS)}")
+    for tag in MANDATORY_HASHTAGS:
+        if tag.lower() not in text.lower():
+            errors.append(f"Caption is missing the mandatory hashtag close: {tag}")
+    if errors:
+        eprint("[blocked] This post violates HADES content rules:")
+        for err in errors:
+            eprint(f"  - {err}")
+        raise SystemExit(1)
+
+
+def log_run(record: dict):
+    record["logged_at"] = datetime.datetime.utcnow().isoformat() + "Z"
+    with open(LOG_PATH, "a") as f:
+        f.write(json.dumps(record) + "\n")
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Create a HADES post via Buffer.")
+    ap.add_argument("--platform", required=True, choices=sorted(CHANNEL_ENV_MAP))
+    ap.add_argument("--channel-id", help="Override the channel id directly.")
+    ap.add_argument("--pillar", required=True, help="One of the 3 HADES content pillars.")
+    ap.add_argument("--highlight", required=True, help="One of the 10 HADES IG highlights.")
+    ap.add_argument("--text", help="Caption text (or use --text-file).")
+    ap.add_argument("--text-file", help="Path to a file containing the caption text.")
+    ap.add_argument(
+        "--mode", choices=["queue", "schedule"], default="queue",
+        help="queue = addToQueue, schedule = customScheduled (requires --due-at).",
+    )
+    ap.add_argument("--due-at", help="ISO 8601 datetime, required if --mode schedule.")
+    ap.add_argument(
+        "--approved", action="store_true",
+        help="Human has reviewed and approved this post to go live. "
+             "Without this flag the post is always saved as a Buffer draft.",
+    )
+    args = ap.parse_args()
+
     if args.text_file:
-        path = Path(args.text_file)
-        if not path.is_file():
-            die(f"Text file not found: {path}")
-        return path.read_text(encoding="utf-8").strip()
-    if args.text:
-        return args.text.strip()
-    die("Provide --text or --text-file")
+        with open(args.text_file) as f:
+            text = f.read().strip()
+    elif args.text:
+        text = args.text
+    else:
+        raise SystemExit("Provide --text or --text-file.")
 
+    validate_content(args.pillar, args.highlight, text)
+    channel_id = resolve_channel_id(args.platform, args.channel_id)
 
-def validate_content(text: str, pillar: str, highlight: str) -> None:
-    if pillar not in ALLOWED_PILLARS:
-        die(
-            f"Invalid pillar '{pillar}'. Allowed: {', '.join(sorted(ALLOWED_PILLARS))}"
-        )
-    hl_map = {h.upper(): h for h in ALLOWED_HIGHLIGHTS}
-    if highlight.upper() not in hl_map:
-        die(
-            f"Invalid highlight '{highlight}'. Allowed: {', '.join(sorted(ALLOWED_HIGHLIGHTS))}"
-        )
-    lower = text.lower()
-    if "#hades" not in lower or "#hadesmarkets" not in lower:
-        die(
-            "Caption must contain mandatory hashtags #HADES and #hadesmarkets. "
-            "Refusing to post."
-        )
-
-
-def build_input(
-    *,
-    text: str,
-    channel_id: str,
-    mode: str,
-    approved: bool,
-    due_at: str | None,
-) -> dict:
-    share_mode = MODE_MAP[mode]
-    payload: dict = {
+    post_input = {
         "text": text,
         "channelId": channel_id,
         "schedulingType": "automatic",
-        "mode": share_mode,
+        "mode": "addToQueue" if args.mode == "queue" else "customScheduled",
     }
-    if not approved:
-        payload["saveToDraft"] = True
-    if mode == "schedule":
-        if not due_at:
-            die(
-                "--mode schedule requires --due-at "
-                "(ISO 8601 UTC, e.g. 2026-09-15T14:00:00.000Z)"
-            )
-        payload["dueAt"] = due_at
-    return payload
+    if args.mode == "schedule":
+        if not args.due_at:
+            raise SystemExit("--due-at is required when --mode schedule.")
+        post_input["dueAt"] = args.due_at
 
-
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="HADES Marketing — create Buffer post (draft by default)"
-    )
-    parser.add_argument(
-        "--platform",
-        required=True,
-        choices=["instagram", "x", "twitter", "tiktok"],
-        help="Target platform (maps to BUFFER_CHANNEL_* env)",
-    )
-    parser.add_argument("--pillar", required=True, help="Content pillar")
-    parser.add_argument("--highlight", required=True, help="Instagram highlight name")
-    parser.add_argument("--text", help="Caption text (include L1 + L2 + hashtags)")
-    parser.add_argument("--text-file", help="Path to caption file")
-    parser.add_argument(
-        "--mode",
-        choices=["queue", "now", "schedule"],
-        default="queue",
-        help="queue=addToQueue, now=shareNow, schedule=customScheduled",
-    )
-    parser.add_argument(
-        "--due-at",
-        help="ISO 8601 UTC when --mode schedule (e.g. 2026-09-15T14:00:00.000Z)",
-    )
-    parser.add_argument(
-        "--channel-id",
-        help="Override BUFFER_CHANNEL_* for this run",
-    )
-    parser.add_argument(
-        "--approved",
-        action="store_true",
-        help="Human approved this exact caption. Without this flag, always draft.",
-    )
-    args = parser.parse_args()
-
-    text = load_text(args)
-    validate_content(text, args.pillar, args.highlight)
-    channel_id = resolve_channel_id(args.platform, args.channel_id)
-
-    hl_canonical = {h.upper(): h for h in ALLOWED_HIGHLIGHTS}[args.highlight.upper()]
-
-    post_input = build_input(
-        text=text,
-        channel_id=channel_id,
-        mode=args.mode,
-        approved=args.approved,
-        due_at=args.due_at,
-    )
-
-    log_base = {
-        "platform": args.platform,
-        "pillar": args.pillar,
-        "highlight": hl_canonical,
-        "mode": args.mode,
-        "approved": bool(args.approved),
-        "channel_id": channel_id,
-        "text_preview": text[:120].replace("\n", " "),
-    }
+    # Approval gate: unapproved content is always forced into Buffer's draft state.
+    if not args.approved:
+        post_input["saveToDraft"] = True
+        eprint("[info] --approved not set — creating as a DRAFT for human review.")
 
     try:
-        data = graphql_request(CREATE_MUTATION, {"input": post_input})
+        result = graphql_request(CREATE_POST_MUTATION, {"input": post_input})
     except BufferAPIError as e:
-        append_log({**log_base, "outcome": "error", "error": str(e)})
-        die(str(e))
+        eprint(f"[error] {e}")
+        log_run({
+            "platform": args.platform, "pillar": args.pillar,
+            "highlight": args.highlight, "approved": args.approved,
+            "mode": args.mode, "result": "error", "detail": str(e),
+        })
+        raise SystemExit(1)
 
-    result = data.get("createPost") or {}
-    if "message" in result and "post" not in result:
-        msg = result.get("message") or "Unknown Buffer mutation error"
-        append_log({**log_base, "outcome": "mutation_error", "error": msg})
-        die(msg)
+    outcome = result.get("createPost", {})
+    log_run({
+        "platform": args.platform, "pillar": args.pillar,
+        "highlight": args.highlight, "approved": args.approved,
+        "mode": args.mode, "result": outcome,
+    })
 
-    post = result.get("post") or {}
-    post_id = post.get("id")
-    status = post.get("status")
-    due_at = post.get("dueAt")
-
-    outcome = "draft" if not args.approved else args.mode
-    append_log(
-        {
-            **log_base,
-            "outcome": outcome,
-            "post_id": post_id,
-            "status": status,
-            "due_at": due_at,
-        }
-    )
-
-    print("ok")
-    print(f"  post_id:  {post_id}")
-    print(f"  status:   {status}")
-    if due_at:
-        print(f"  due_at:   {due_at}")
-    print(f"  approved: {args.approved}")
-    if not args.approved:
-        print(
-            "  note: saved as Buffer DRAFT (no --approved). "
-            "Review in Buffer, then re-run with --approved to queue/schedule."
-        )
+    if outcome.get("post"):
+        post = outcome["post"]
+        print(f"[ok] Post {post['id']} created — status: {post.get('status')}, "
+              f"dueAt: {post.get('dueAt')}")
+    else:
+        eprint(f"[error] Buffer rejected the post: {outcome.get('message')}")
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
