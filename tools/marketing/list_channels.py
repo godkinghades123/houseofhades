@@ -14,10 +14,12 @@ Prints org IDs and every channel (id, name, service) so you can set:
 
 from __future__ import annotations
 
-import json
 import sys
+from pathlib import Path
 
-from buffer_client import BufferError, die, graphql
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from buffer_client import BufferAPIError, eprint, graphql_request
 
 ACCOUNT_QUERY = """
 query {
@@ -44,14 +46,16 @@ query ($orgId: String!) {
 
 def main() -> None:
     try:
-        data = graphql(ACCOUNT_QUERY)
-    except BufferError as e:
-        die(str(e))
+        data = graphql_request(ACCOUNT_QUERY)
+    except BufferAPIError as e:
+        eprint(f"error: {e}")
+        sys.exit(1)
 
     account = data.get("account") or {}
     orgs = account.get("organizations") or []
     if not orgs:
-        die("No organizations found on this Buffer account.")
+        eprint("error: No organizations found on this Buffer account.")
+        sys.exit(1)
 
     print("=== Buffer account ===")
     print(f"account_id: {account.get('id')}")
@@ -65,8 +69,8 @@ def main() -> None:
         print()
 
         try:
-            ch_data = graphql(CHANNELS_QUERY, {"orgId": org_id})
-        except BufferError as e:
+            ch_data = graphql_request(CHANNELS_QUERY, {"orgId": org_id})
+        except BufferAPIError as e:
             print(f"  (failed to list channels: {e})")
             continue
 
@@ -91,6 +95,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # Allow running from repo root or from tools/marketing/
-    sys.path.insert(0, str(__file__).rsplit("/", 1)[0])
     main()

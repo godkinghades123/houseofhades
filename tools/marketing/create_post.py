@@ -28,7 +28,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from buffer_client import BufferError, die, graphql
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from buffer_client import BufferAPIError, eprint, graphql_request
 
 # --- HADES content rules ---
 ALLOWED_PILLARS = {
@@ -85,10 +87,14 @@ mutation CreatePost($input: CreatePostInput!) {
 LOG_PATH = Path(__file__).resolve().parent / "approval_log.jsonl"
 
 
+def die(msg: str, code: int = 1) -> None:
+    eprint(f"error: {msg}")
+    sys.exit(code)
+
+
 def append_log(entry: dict) -> None:
     entry = dict(entry)
     entry["ts"] = datetime.now(timezone.utc).isoformat()
-    # Never log secrets
     for key in list(entry.keys()):
         if "token" in key.lower() or "secret" in key.lower() or "bearer" in key.lower():
             entry.pop(key, None)
@@ -127,20 +133,17 @@ def validate_content(text: str, pillar: str, highlight: str) -> None:
         die(
             f"Invalid pillar '{pillar}'. Allowed: {', '.join(sorted(ALLOWED_PILLARS))}"
         )
-    # Allow case-insensitive highlight match but store canonical
     hl_map = {h.upper(): h for h in ALLOWED_HIGHLIGHTS}
     if highlight.upper() not in hl_map:
         die(
             f"Invalid highlight '{highlight}'. Allowed: {', '.join(sorted(ALLOWED_HIGHLIGHTS))}"
         )
-    if "#HADES" not in text or "#hadesmarkets" not in text.lower().replace(" ", ""):
-        # Strict: both tags must appear (hadesmarkets case-insensitive)
-        lower = text.lower()
-        if "#hades" not in lower or "#hadesmarkets" not in lower:
-            die(
-                "Caption must contain mandatory hashtags #HADES and #hadesmarkets. "
-                "Refusing to post."
-            )
+    lower = text.lower()
+    if "#hades" not in lower or "#hadesmarkets" not in lower:
+        die(
+            "Caption must contain mandatory hashtags #HADES and #hadesmarkets. "
+            "Refusing to post."
+        )
 
 
 def build_input(
@@ -158,12 +161,14 @@ def build_input(
         "schedulingType": "automatic",
         "mode": share_mode,
     }
-    # Approval gate: without --approved always draft
     if not approved:
         payload["saveToDraft"] = True
     if mode == "schedule":
         if not due_at:
-            die("--mode schedule requires --due-at (ISO 8601 UTC, e.g. 2026-09-15T14:00:00.000Z)")
+            die(
+                "--mode schedule requires --due-at "
+                "(ISO 8601 UTC, e.g. 2026-09-15T14:00:00.000Z)"
+            )
         payload["dueAt"] = due_at
     return payload
 
@@ -207,7 +212,6 @@ def main() -> None:
     validate_content(text, args.pillar, args.highlight)
     channel_id = resolve_channel_id(args.platform, args.channel_id)
 
-    # Canonical highlight for logging
     hl_canonical = {h.upper(): h for h in ALLOWED_HIGHLIGHTS}[args.highlight.upper()]
 
     post_input = build_input(
@@ -229,14 +233,13 @@ def main() -> None:
     }
 
     try:
-        data = graphql(CREATE_MUTATION, {"input": post_input})
-    except BufferError as e:
+        data = graphql_request(CREATE_MUTATION, {"input": post_input})
+    except BufferAPIError as e:
         append_log({**log_base, "outcome": "error", "error": str(e)})
         die(str(e))
 
     result = data.get("createPost") or {}
     if "message" in result and "post" not in result:
-        # MutationError shape
         msg = result.get("message") or "Unknown Buffer mutation error"
         append_log({**log_base, "outcome": "mutation_error", "error": msg})
         die(msg)
@@ -264,9 +267,11 @@ def main() -> None:
         print(f"  due_at:   {due_at}")
     print(f"  approved: {args.approved}")
     if not args.approved:
-        print("  note: saved as Buffer DRAFT (no --approved). Review in Buffer, then re-run with --approved to queue/schedule.")
+        print(
+            "  note: saved as Buffer DRAFT (no --approved). "
+            "Review in Buffer, then re-run with --approved to queue/schedule."
+        )
 
 
 if __name__ == "__main__":
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
     main()
