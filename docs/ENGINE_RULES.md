@@ -30,6 +30,15 @@ Any **NO** → no trade.
 8. Risk size — ≤ 3% Engine equity (≤ 8% only with full stack); cash floors respected  
 9. Journal — Signal Log / Trade Log updated  
 
+## Approved chart tools
+
+| Tool | Path | Role |
+|------|------|------|
+| HalfTrend Long/Short Signal Engine [BigBeluga] | [`tools/tradingview/halftrend-long-short-signal-engine.pine`](../tools/tradingview/halftrend-long-short-signal-engine.pine) | Visual regime filter + projected SL/TP matrix. **Not** an auto-entry system. |
+
+See [`tools/tradingview/README.md`](../tools/tradingview/README.md) for usage rules.  
+Indicator levels feed the written HADES format; they never replace it.
+
 ## Journal / Signal Log
 
 - Watches and entries → **Signal Log** in Notion (Status, Thesis, Engine or Core, **GitHub Issue** URL when linked)  
