@@ -1,99 +1,60 @@
-#!/usr/bin/env python3
 """
-Shared Buffer GraphQL client for HADES Marketing agent.
-
-Auth: MARKETING__BRAND__AGENT env var (Bearer token).
-Never logs or prints the token.
+buffer_client.py
+-----------------
+Thin wrapper around Buffer's GraphQL API (https://api.buffer.com).
+Auth token is read from the MARKETING__BRAND__AGENT secret / env var.
+Never hardcode the token. Never log the token.
 """
 
-from __future__ import annotations
-
-import json
 import os
 import sys
-import urllib.error
+import json
 import urllib.request
-from typing import Any
+import urllib.error
 
 BUFFER_ENDPOINT = "https://api.buffer.com"
-SECRET_NAME = "MARKETING__BRAND__AGENT"
+SECRET_ENV_VAR = "MARKETING__BRAND__AGENT"
 
 
-class BufferError(Exception):
-    """Raised when Buffer returns a GraphQL or HTTP error."""
-
-    def __init__(self, message: str, payload: dict[str, Any] | None = None):
-        super().__init__(message)
-        self.payload = payload or {}
+class BufferAPIError(RuntimeError):
+    pass
 
 
 def get_token() -> str:
-    token = os.environ.get(SECRET_NAME, "").strip()
+    token = os.environ.get(SECRET_ENV_VAR)
     if not token:
-        raise BufferError(
-            f"Missing secret: set env var {SECRET_NAME} to your Buffer API Bearer token."
+        raise BufferAPIError(
+            f"Missing {SECRET_ENV_VAR}. Set it as a GitHub Actions secret / "
+            f"local env var before running any Buffer script."
         )
-    # Allow accidental "Bearer xxx" paste
-    if token.lower().startswith("bearer "):
-        token = token[7:].strip()
-    return token
+    return token.strip()
 
 
-def graphql(query: str, variables: dict[str, Any] | None = None) -> dict[str, Any]:
-    """
-    Execute a GraphQL operation against Buffer.
-    Returns the top-level `data` object on success.
-    Raises BufferError on HTTP or GraphQL errors.
-    """
+def graphql_request(query: str, variables: dict | None = None) -> dict:
+    """POST a GraphQL query/mutation to Buffer and return the parsed JSON body."""
     token = get_token()
-    body: dict[str, Any] = {"query": query}
-    if variables:
-        body["variables"] = variables
-
+    payload = json.dumps({"query": query, "variables": variables or {}}).encode("utf-8")
     req = urllib.request.Request(
         BUFFER_ENDPOINT,
-        data=json.dumps(body).encode("utf-8"),
+        data=payload,
+        method="POST",
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {token}",
-            "Accept": "application/json",
-            "User-Agent": "HouseOfHades-MarketingAgent/1.0",
         },
-        method="POST",
     )
-
     try:
-        with urllib.request.urlopen(req, timeout=45) as resp:
-            raw = resp.read().decode("utf-8")
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        err_body = e.read().decode("utf-8", errors="replace")
-        raise BufferError(
-            f"Buffer HTTP {e.code}: {err_body[:500]}",
-            {"status": e.code, "body": err_body},
-        ) from e
+        detail = e.read().decode("utf-8", errors="replace")
+        raise BufferAPIError(f"Buffer API HTTP {e.code}: {detail}") from e
     except urllib.error.URLError as e:
-        raise BufferError(f"Buffer network error: {e.reason}") from e
-
-    try:
-        parsed = json.loads(raw)
-    except json.JSONDecodeError as e:
-        raise BufferError(f"Buffer returned non-JSON: {raw[:300]}") from e
-
-    if "errors" in parsed and parsed["errors"]:
-        msgs = []; 
-        for err in parsed["errors"]:
-            if isinstance(err, dict):
-                msgs.append(str(err.get("message", err)))
-            else:
-                msgs.append(str(err))
-        raise BufferError("; ".join(msgs), parsed)
-
-    data = parsed.get("data")
-    if data is None:
-        raise BufferError("Buffer response missing data", parsed)
-    return data
+        raise BufferAPIError(f"Could not reach Buffer API: {e}") from e
+    if "errors" in body and body["errors"]:
+        raise BufferAPIError(f"Buffer API returned errors: {body['errors']}")
+    return body.get("data", {})
 
 
-def die(msg: str, code: int = 1) -> None:
-    print(f"error: {msg}", file=sys.stderr)
-    sys.exit(code)
+def eprint(*args):
+    print(*args, file=sys.stderr)
