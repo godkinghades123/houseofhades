@@ -1,8 +1,8 @@
 {
-  "syncedAt": "2026-09-11T03:30:00-04:00",
-  "source": "Headquarters + GitHub Issues (manual PP sync)",
+  "syncedAt": "2026-09-14T09:09:33Z",
+  "source": "Notion HQ + GitHub Issues (sync_ops_map.py)",
   "engine": {
-    "netLiq": 287,
+    "netLiq": 287.0,
     "phase": 1,
     "ytd": "red",
     "maxLossPct": 3,
@@ -10,40 +10,180 @@
     "rule": "Defined-risk options only"
   },
   "cash": {
-    "chime": 10,
-    "keybank": 65,
-    "keybankFloor": { "min": 700, "target": 2000 },
-    "fidelityGo": 80,
+    "chime": 10.0,
+    "keybank": 700.0,
+    "keybankFloor": {
+      "min": 700,
+      "target": 2000
+    },
+    "fidelityGo": 80.0,
     "groundfloor": 30.11
   },
-  "trustNotarized": false,
+  "trustNotarized": true,
   "openIssueCount": 9,
   "kpis": [
-    { "label": "Engine Net Liq", "value": "$287", "change": "Phase 1", "tone": "neutral" },
-    { "label": "KeyBank Build", "value": "$65", "change": "Floor $700", "tone": "neutral" },
-    { "label": "Open Issues", "value": "9", "change": "2 high", "tone": "neutral" },
-    { "label": "Watchlists", "value": "36", "change": "stable", "tone": "positive" }
+    {
+      "label": "Engine Net Liq",
+      "value": "$287",
+      "change": "Phase 1",
+      "tone": "neutral"
+    },
+    {
+      "label": "KeyBank Build",
+      "value": "$700",
+      "change": "Floor $700",
+      "tone": "neutral"
+    },
+    {
+      "label": "Open Issues",
+      "value": "9",
+      "change": "2 high",
+      "tone": "neutral"
+    },
+    {
+      "label": "Watchlists",
+      "value": "36",
+      "change": "stable",
+      "tone": "positive"
+    }
   ],
   "tableRows": [
-    { "id": "i5", "name": "Trust notarization (Stage 1 blocker)", "type": "Task", "status": "Open", "owner": "Javarous", "updated": "Sep 4", "priority": "high" },
-    { "id": "i3", "name": "Hit weekly water profit target toward rent", "type": "Task", "status": "Open", "owner": "Javarous", "updated": "Sep 4", "priority": "high" },
-    { "id": "i8", "name": "Stage 1 content cadence — ship next posts", "type": "Task", "status": "Open", "owner": "PP / Javarous", "updated": "Sep 4", "priority": "medium" },
-    { "id": "i6", "name": "VICI 2-week watch review", "type": "Signal", "status": "Open", "owner": "PP", "updated": "Sep 4", "priority": "medium" },
-    { "id": "i7", "name": "Journal HIMS + CMCSA vs entry thesis", "type": "Signal", "status": "Open", "owner": "PP", "updated": "Sep 4", "priority": "medium" },
-    { "id": "i10", "name": "Weekly watchlist net-change refresh", "type": "Watchlist", "status": "Open", "owner": "PP", "updated": "Sep 5", "priority": "medium" },
-    { "id": "i9", "name": "Refresh Continuity §05 portfolio to live truth", "type": "Task", "status": "Open", "owner": "PP", "updated": "Sep 5", "priority": "low" },
-    { "id": "i11", "name": "Reconnect GitHub connector with Projects scope", "type": "Task", "status": "Open", "owner": "PP", "updated": "Sep 5", "priority": "low" },
-    { "id": "eng", "name": "Engine Phase 1 risk discipline", "type": "Position", "status": "Active", "owner": "PP", "updated": "Live", "priority": "high" }
+    {
+      "id": "i12",
+      "name": "[Content] Optional: true Notion GitHub Issues synced DB (separate from Signal Log)",
+      "type": "Signal",
+      "status": "Open",
+      "owner": "PP / Javarous",
+      "updated": "2026-09-05",
+      "priority": "low"
+    },
+    {
+      "id": "i11",
+      "name": "[Exec] Reconnect GitHub connector with Projects scope",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-05",
+      "priority": "low"
+    },
+    {
+      "id": "i10",
+      "name": "[Exec] Weekly watchlist net-change refresh (post Aug 3\u20137)",
+      "type": "Watchlist",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-05",
+      "priority": "medium"
+    },
+    {
+      "id": "i9",
+      "name": "[Exec] Refresh Continuity \u00a705 portfolio to live truth",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-05",
+      "priority": "low"
+    },
+    {
+      "id": "i8",
+      "name": "Stage 1 content cadence \u2014 ship next posts",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP / Javarous",
+      "updated": "2026-09-04",
+      "priority": "medium"
+    },
+    {
+      "id": "i7",
+      "name": "Journal HIMS + CMCSA vs entry thesis",
+      "type": "Signal",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-04",
+      "priority": "medium"
+    },
+    {
+      "id": "i6",
+      "name": "VICI 2-week watch review (entry interest ~$24.96)",
+      "type": "Signal",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-04",
+      "priority": "medium"
+    },
+    {
+      "id": "i5",
+      "name": "Trust notarization (Stage 1 blocker)",
+      "type": "Task",
+      "status": "Open",
+      "owner": "Javarous",
+      "updated": "2026-09-04",
+      "priority": "high"
+    },
+    {
+      "id": "i3",
+      "name": "Hit weekly water profit target toward rent",
+      "type": "Task",
+      "status": "Open",
+      "owner": "Javarous",
+      "updated": "2026-09-04",
+      "priority": "high"
+    },
+    {
+      "id": "eng",
+      "name": "Engine Phase 1 risk discipline",
+      "type": "Position",
+      "status": "Active",
+      "owner": "PP",
+      "updated": "Live",
+      "priority": "high"
+    }
   ],
   "openIssueLinks": [
-    { "number": 5, "title": "Trust notarization (Stage 1 blocker)", "url": "https://github.com/godkinghades123/houseofhades/issues/5" },
-    { "number": 3, "title": "Hit weekly water profit target toward rent", "url": "https://github.com/godkinghades123/houseofhades/issues/3" },
-    { "number": 8, "title": "Stage 1 content cadence — ship next posts", "url": "https://github.com/godkinghades123/houseofhades/issues/8" },
-    { "number": 6, "title": "VICI 2-week watch review", "url": "https://github.com/godkinghades123/houseofhades/issues/6" },
-    { "number": 7, "title": "Journal HIMS + CMCSA vs entry thesis", "url": "https://github.com/godkinghades123/houseofhades/issues/7" },
-    { "number": 10, "title": "Weekly watchlist net-change refresh", "url": "https://github.com/godkinghades123/houseofhades/issues/10" },
-    { "number": 9, "title": "Refresh Continuity §05 portfolio to live truth", "url": "https://github.com/godkinghades123/houseofhades/issues/9" },
-    { "number": 11, "title": "Reconnect GitHub connector with Projects scope", "url": "https://github.com/godkinghades123/houseofhades/issues/11" },
-    { "number": 12, "title": "Optional: Notion GitHub Issues synced DB", "url": "https://github.com/godkinghades123/houseofhades/issues/12" }
+    {
+      "number": 12,
+      "title": "[Content] Optional: true Notion GitHub Issues synced DB (separate from Signal Log)",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/12"
+    },
+    {
+      "number": 11,
+      "title": "[Exec] Reconnect GitHub connector with Projects scope",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/11"
+    },
+    {
+      "number": 10,
+      "title": "[Exec] Weekly watchlist net-change refresh (post Aug 3\u20137)",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/10"
+    },
+    {
+      "number": 9,
+      "title": "[Exec] Refresh Continuity \u00a705 portfolio to live truth",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/9"
+    },
+    {
+      "number": 8,
+      "title": "Stage 1 content cadence \u2014 ship next posts",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/8"
+    },
+    {
+      "number": 7,
+      "title": "Journal HIMS + CMCSA vs entry thesis",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/7"
+    },
+    {
+      "number": 6,
+      "title": "VICI 2-week watch review (entry interest ~$24.96)",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/6"
+    },
+    {
+      "number": 5,
+      "title": "Trust notarization (Stage 1 blocker)",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/5"
+    },
+    {
+      "number": 3,
+      "title": "Hit weekly water profit target toward rent",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/3"
+    }
   ]
 }
