@@ -62,8 +62,6 @@ def block_plain_text(block: dict) -> str:
 
 
 def fetch_hq_text(page_id: str) -> str:
-    pid = page_id.replace("-", "")
-    # Notion accepts UUID with or without dashes in path in practice; use as given
     url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
     texts: list[str] = []
     while url:
@@ -75,7 +73,6 @@ def fetch_hq_text(page_id: str) -> str:
             t = block_plain_text(block)
             if t:
                 texts.append(t)
-            # simple table cell handling
             if block.get("type") == "table_row":
                 cells = block.get("table_row", {}).get("cells", [])
                 row = []
@@ -84,7 +81,10 @@ def fetch_hq_text(page_id: str) -> str:
                 texts.append(" | ".join(row))
         next_cursor = data.get("next_cursor")
         if data.get("has_more") and next_cursor:
-            url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100&start_cursor={next_cursor}"
+            url = (
+                f"https://api.notion.com/v1/blocks/{page_id}/children"
+                f"?page_size=100&start_cursor={next_cursor}"
+            )
         else:
             url = ""
     return "\n".join(texts)
@@ -110,18 +110,23 @@ def fetch_github_issues() -> list[dict]:
     headers = {
         "Authorization": f"Bearer {GITHUB_TOKEN}",
         "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
     }
     resp = requests.get(url, headers=headers, timeout=30)
     if resp.status_code != 200:
-        die(f"GitHub issues error {resp.status_code}: {resp.text}")
+        # Soft-fail: HQ sync should still succeed if issues are blocked
+        print(
+            f"WARN: GitHub issues {resp.status_code} — proceeding without issue data. "
+            f"Body: {resp.text[:300]}",
+            file=sys.stderr,
+        )
+        return []
     issues = []
     for item in resp.json():
         if "pull_request" in item:
             continue
-        labels = [l["name"] for l in item.get("labels", [])]
         title = item.get("title") or ""
         number = item.get("number")
-        # priority heuristic
         priority = "medium"
         low = title.lower()
         if number in (3, 5) or "blocker" in low or "trust" in low or "keybank" in low or "water" in low:
@@ -233,7 +238,8 @@ def main() -> None:
             "fidelityGo": fidelity,
             "groundfloor": groundfloor,
         },
-        "trustNotarized": "notariz" in text.lower() and "not started" not in text.lower()
+        "trustNotarized": "notariz" in text.lower()
+        and "not started" not in text.lower()
         and "not notarized" not in text.lower(),
         "openIssueCount": open_count,
         "kpis": [
