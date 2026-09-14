@@ -1,28 +1,18 @@
-#!/usr/bin/env python3
 """
-List Buffer organizations and channels for HADES Marketing setup.
+list_channels.py
+-----------------
+One-time / occasional lookup script: prints your Buffer organization ID
+and every connected channel's ID, name, and service (instagram, twitter, tiktok...).
+Run this first to fill in the CHANNEL_IDS map used by create_post.py.
 
 Usage:
-  export MARKETING__BRAND__AGENT="<token>"
-  python tools/marketing/list_channels.py
-
-Prints org IDs and every channel (id, name, service) so you can set:
-  BUFFER_CHANNEL_INSTAGRAM
-  BUFFER_CHANNEL_X
-  BUFFER_CHANNEL_TIKTOK
+    python tools/marketing/list_channels.py
 """
 
-from __future__ import annotations
-
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from buffer_client import BufferAPIError, eprint, graphql_request
+from buffer_client import graphql_request, eprint, BufferAPIError
 
 ACCOUNT_QUERY = """
-query {
+query GetAccount {
   account {
     id
     organizations {
@@ -34,64 +24,55 @@ query {
 """
 
 CHANNELS_QUERY = """
-query ($orgId: String!) {
-  channels(input: { organizationId: $orgId }) {
+query GetChannels($organizationId: OrganizationId!) {
+  channels(input: { organizationId: $organizationId }) {
     id
     name
+    displayName
     service
+    isDisconnected
   }
 }
 """
 
 
-def main() -> None:
+def main():
     try:
-        data = graphql_request(ACCOUNT_QUERY)
+        account_data = graphql_request(ACCOUNT_QUERY)
     except BufferAPIError as e:
-        eprint(f"error: {e}")
-        sys.exit(1)
+        eprint(f"[error] {e}")
+        raise SystemExit(1)
 
-    account = data.get("account") or {}
-    orgs = account.get("organizations") or []
+    orgs = account_data.get("account", {}).get("organizations", [])
     if not orgs:
-        eprint("error: No organizations found on this Buffer account.")
-        sys.exit(1)
-
-    print("=== Buffer account ===")
-    print(f"account_id: {account.get('id')}")
-    print()
+        eprint("No organizations found on this Buffer account/token.")
+        raise SystemExit(1)
 
     for org in orgs:
-        org_id = org.get("id")
-        org_name = org.get("name") or "(unnamed)"
-        print(f"=== Organization: {org_name} ===")
-        print(f"organization_id: {org_id}")
-        print()
-
+        print(f"\nOrganization: {org['name']}  (id: {org['id']})")
         try:
-            ch_data = graphql_request(CHANNELS_QUERY, {"orgId": org_id})
+            ch_data = graphql_request(CHANNELS_QUERY, {"organizationId": org["id"]})
         except BufferAPIError as e:
-            print(f"  (failed to list channels: {e})")
+            eprint(f"  [error fetching channels] {e}")
             continue
 
-        channels = ch_data.get("channels") or []
+        channels = ch_data.get("channels", [])
         if not channels:
-            print("  (no channels)")
+            print("  (no channels connected)")
             continue
 
-        print(f"{'service':<12} {'name':<28} channel_id")
-        print("-" * 72)
         for ch in channels:
-            service = (ch.get("service") or "?").lower()
-            name = ch.get("name") or ""
-            cid = ch.get("id") or ""
-            print(f"{service:<12} {name:<28} {cid}")
-        print()
+            status = "DISCONNECTED" if ch.get("isDisconnected") else "connected"
+            print(
+                f"  - {ch['service']:<10} {ch.get('displayName') or ch['name']:<25} "
+                f"id: {ch['id']}  [{status}]"
+            )
 
-    print("Next: export the channel IDs you need, e.g.")
-    print('  export BUFFER_CHANNEL_INSTAGRAM="<id>"')
-    print('  export BUFFER_CHANNEL_X="<id>"')
-    print('  export BUFFER_CHANNEL_TIKTOK="<id>"')
+    print(
+        "\nCopy the channel IDs you need (Instagram / X / TikTok) into "
+        "your environment as BUFFER_CHANNEL_INSTAGRAM, BUFFER_CHANNEL_X, "
+        "BUFFER_CHANNEL_TIKTOK, or pass --channel-id directly to create_post.py."
+    )
 
 
 if __name__ == "__main__":
