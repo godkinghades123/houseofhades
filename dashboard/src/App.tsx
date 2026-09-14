@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { MapView } from './components/MapView'
 import { SystemMap } from './components/SystemMap'
 import { AgentOsView } from './components/AgentOsView'
+import { MarketingAgentView } from './components/MarketingAgentView'
 import { Sidebar } from './components/Sidebar'
 import { KPIBar } from './components/KPIBar'
 import { DataTable } from './components/DataTable'
@@ -15,7 +16,7 @@ import {
 } from './data/live'
 import { INTEGRATION_STATUS } from './services/integrations'
 
-type ViewMode = 'ops' | 'system' | 'agent'
+type ViewMode = 'ops' | 'system' | 'agent' | 'marketing'
 
 export default function App() {
   const [selected, setSelected] = useState<string | null>(null)
@@ -32,7 +33,13 @@ export default function App() {
   })
 
   const viewLabel =
-    view === 'system' ? 'Page flow' : view === 'ops' ? 'Atlanta ops' : 'Agent OS'
+    view === 'system'
+      ? 'Page flow'
+      : view === 'ops'
+        ? 'Atlanta ops'
+        : view === 'marketing'
+          ? 'Marketing agent'
+          : 'Agent OS'
 
   return (
     <div className="h-screen flex flex-col bg-hades-bg text-white overflow-hidden">
@@ -46,6 +53,7 @@ export default function App() {
             {(
               [
                 ['agent', 'Agent OS'],
+                ['marketing', 'Marketing'],
                 ['system', 'System Map'],
                 ['ops', 'Ops Map'],
               ] as const
@@ -95,6 +103,7 @@ export default function App() {
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="flex-1 relative min-h-0 overflow-hidden">
             {view === 'agent' && <AgentOsView />}
+            {view === 'marketing' && <MarketingAgentView />}
             {view === 'system' && (
               <SystemMap selected={selected} onSelect={setSelected} />
             )}
@@ -123,6 +132,7 @@ export default function App() {
         <span>Notion: {INTEGRATION_STATUS.notion}</span>
         <span>Engine: {INTEGRATION_STATUS.engine}</span>
         <span>GitHub Issues: {INTEGRATION_STATUS.github}</span>
+        <span>Marketing: {INTEGRATION_STATUS.marketing}</span>
       </div>
     </div>
   )

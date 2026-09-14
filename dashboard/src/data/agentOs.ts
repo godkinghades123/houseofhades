@@ -25,8 +25,9 @@ export const BUSINESS_PILLARS: BusinessPillar[] = [
     id: 'marketing',
     n: 1,
     title: 'MARKETING / BRAND',
-    tools: ['Instagram', 'Bible', 'Content pillars', 'Highlights'],
-    stage1Truth: '~1k followers · @houseofhadesinc migration open · Truth over hype',
+    tools: ['Instagram', 'Buffer API', 'tools/marketing', 'Highlights'],
+    stage1Truth:
+      '~1k followers · Buffer draft-gated · @houseofhadesinc migration open',
     color: '#38bdf8',
   },
   {
@@ -91,6 +92,7 @@ export const AI_OS_LAYERS: OsLayer[] = [
     nodes: [
       'Notion (HQ, Continuity, Vault…)',
       'GitHub Issues + Actions',
+      'Buffer (MARKETING__BRAND__AGENT)',
       'Tastytrade Engine',
       'Vercel Ops Dashboard',
       'IG + Gumroad',
@@ -102,4 +104,5 @@ export const STAGE1_BLOCKERS = [
   'Trust not notarized',
   'KeyBank under $700 floor',
   'Notion API secrets must work for auto-sync',
+  'Buffer channel IDs not locked yet',
 ]

@@ -9,12 +9,14 @@
  * - NOTION_API_KEY
  * - NOTION_HQ_PAGE_ID  (Headquarters page UUID)
  * - Optional: NOTION_DATABASE_ID for PP Learning Sync
+ * - MARKETING__BRAND__AGENT  (Buffer Bearer token — tools/marketing only)
  */
 
 export const INTEGRATION_STATUS = {
   notion: 'action-or-manual' as const,
   engine: 'from-hq-snapshot' as const,
   github: 'from-issues-api' as const,
+  marketing: 'buffer-draft-gated' as const,
   lastManualSync: '2026-09-11',
   liveFile: 'dashboard/src/data/synced_meta.json',
 }
