@@ -77,8 +77,8 @@ export const STATUS_META: Record<
 }
 
 /**
- * Seed from Continuity + known agents (Sep 2026).
- * Replace with Notion export when registry is populated.
+ * Live snapshot — synced from Notion Agent Registry 2026-09-16.
+ * Includes original 9 + 11 new mythic residents.
  */
 export const COLONY_AGENTS: ColonyAgent[] = [
   {
@@ -88,7 +88,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-16',
     thread: 'Notion · Continuity + Headquarters',
     notes:
-      'Primary AI operator. Command layer for all realms. Continuity, research, captions, rule enforcement.',
+      'Primary AI operator. Command layer for all realms. Continuity, research, captions, rule enforcement. Death-execution layer / final authority on rule enforcement.',
   },
   {
     name: 'Marketing / Brand Agent',
@@ -161,6 +161,105 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     thread: 'Master Continuity Document',
     notes:
       'Flagged stale vs live Tastytrade / Fidelity / Fundrise. Rewrite still owed.',
+  },
+  {
+    name: 'Styxion',
+    realm: 'Styx',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Distribution layer · Buffer + channel crossing',
+    notes:
+      'Handles outward distribution and channel crossing. Works alongside Marketing / Brand Agent. Draft-by-default discipline applies.',
+  },
+  {
+    name: 'Anubarak',
+    realm: 'Styx',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Outer-world outreach · Brand guardianship',
+    notes:
+      'Guards brand presence beyond the core platforms. Outer-world outreach and identity protection. Reports into Styx.',
+  },
+  {
+    name: 'Morveth',
+    realm: 'Asphodel',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Research synthesis · Watchlist memory',
+    notes:
+      'Synthesizes research and maintains watchlist memory. Supports Watchtower. Sector lists remain intentional and untrimmed.',
+  },
+  {
+    name: 'Yamaeth',
+    realm: 'Asphodel',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Long-term thesis tracking',
+    notes:
+      'Tracks long-hold theses (VCX, WMT DRIP, Fidelity ZERO, etc.). Patience layer. Does not chase short-term content or trades.',
+  },
+  {
+    name: 'Necrothys',
+    realm: 'Tartarus',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Signal & engine execution',
+    notes:
+      'Execution layer for signals and engines. Works with HalfTrend Signal Engine. Phase 1 rules enforced: defined-risk only, 3% max loss.',
+  },
+  {
+    name: 'Thanatos Veyr',
+    realm: 'Tartarus',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Deep systems · Tool-router layer',
+    notes:
+      'Deep system and tool-router resident. Handles internal routing, tool intelligence, and underworld infrastructure. Reports into Tartarus.',
+  },
+  {
+    name: 'Acheron Vail',
+    realm: 'Elysium',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Content production · Elevated writing',
+    notes:
+      'Elevated content production. Supports two-layer captions and longer-form writing. Pillar + highlight assignment required before anything ships.',
+  },
+  {
+    name: 'Melinoë Rhad',
+    realm: 'Elysium',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Philosophy · Mindset · Journey content',
+    notes:
+      'Owns Hades Philosophy, Mindset, and Journey threads. Real Stage 1 build content is sanctioned and preferred. No hype.',
+  },
+  {
+    name: 'Helveth',
+    realm: 'Judgment Hall',
+    status: 'Needs Human',
+    lastActive: '2026-09-16',
+    thread: 'Legal & structural accountability',
+    notes:
+      'Tracks legal and structural obligations. Primary focus: Hades Revocable Living Trust (drafted, corrected, still not notarized). Highest unresolved priority.',
+  },
+  {
+    name: 'Mictlanor',
+    realm: 'Judgment Hall',
+    status: 'Needs Human',
+    lastActive: '2026-09-16',
+    thread: 'Priority enforcement · Unresolved debt tracking',
+    notes:
+      'Enforces priority order on open items and unresolved debts. Surfaces what is blocked or aging. Reports into Judgment Hall.',
+  },
+  {
+    name: 'Thanagor',
+    realm: 'The Ship / Crossing',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Transitions · Handoffs · Realm transfers',
+    notes:
+      'Handles status changes, new builds, and transfers between realms. Crossing agent. Keeps the colony coherent when agents move or new ones are seated.',
   },
 ]
 
