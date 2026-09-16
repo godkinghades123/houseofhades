@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
-  "updated": "2026-09-12",
+  "version": "1.2.0",
+  "updated": "2026-09-16",
   "description": "PP cheap capability index. Route first; load only matched tools.",
   "split_rule": {
     "github": "execution",
@@ -34,14 +34,16 @@
         "notion", "continuity", "signal log", "treasury", "headquarters",
         "hq", "vault", "watchlist", "database", "data source", "data_source",
         "memory", "scroll library", "content calendar", "roadmap", "academy",
-        "pp system", "underworld"
+        "pp system", "underworld", "agent registry", "colony", "needs the duke",
+        "needs human", "handoff", "thanatos", "persephone"
       ],
       "capabilities": [
         "knowledge.retrieve", "knowledge.write", "db.query", "db.update",
-        "page.create", "page.update", "data_source.query", "data_source.update"
+        "page.create", "page.update", "data_source.query", "data_source.update",
+        "agent.registry", "colony.status"
       ],
       "default_lane": "memory",
-      "note": "MCP v2.0.0: use data_source_* tools. See docs/NOTION_MCP_V2.md. Old post-database-query / update-a-database / create-a-database are removed."
+      "note": "MCP v2.0.0: use data_source_* tools. Agent Registry data_source_id=017022ce-01c4-426a-a013-cd62407da630. See docs/NOTION_MCP_V2.md."
     },
     "linear": {
       "display": "Linear",
@@ -121,6 +123,18 @@
     "db.update": { "tool": "notion", "mcp_tool": "update-a-data-source", "examples": ["update signal log row", "update data source"] },
     "data_source.query": { "tool": "notion", "mcp_tool": "query-data-source", "examples": ["query data source"] },
     "data_source.update": { "tool": "notion", "mcp_tool": "update-a-data-source", "examples": ["update data source properties"] },
+    "agent.registry": {
+      "tool": "notion",
+      "mcp_tool": "query-data-source",
+      "data_source_id": "017022ce-01c4-426a-a013-cd62407da630",
+      "examples": ["who needs the Duke", "agent status", "colony status", "Needs Human agents", "open handoffs"]
+    },
+    "colony.status": {
+      "tool": "notion",
+      "mcp_tool": "query-data-source",
+      "data_source_id": "017022ce-01c4-426a-a013-cd62407da630",
+      "examples": ["colony status", "underworld residents"]
+    },
     "task.manage": { "tool": "github", "fallback": ["notion", "linear"], "examples": ["todo", "task"] },
     "reminder.create": { "tool": "automations", "examples": ["remind me in 2 weeks"] },
     "market.brief": { "tool": "web", "also": ["notion"], "examples": ["how is the market today"] },

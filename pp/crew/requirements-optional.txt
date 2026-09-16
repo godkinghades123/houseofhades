@@ -1,0 +1,9 @@
+# Optional — only for pp/crew/crew_hades.py
+# Do not install into the Vercel dashboard environment.
+#
+#   pip install -r pp/crew/requirements-optional.txt
+#
+crewai>=0.80.0
+# Pick one provider stack you actually use:
+# openai>=1.0.0
+# anthropic>=0.34.0

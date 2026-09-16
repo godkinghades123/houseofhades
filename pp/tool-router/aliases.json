@@ -10,7 +10,16 @@
     "create a github issue": { "tools": ["github"], "capability": "issue.create" },
     "push to the repo": { "tools": ["github"], "capability": "repo.modify" },
     "commit this": { "tools": ["github"], "capability": "repo.modify" },
-    "house of hades repo": { "tools": ["github"], "capability": "repo.modify" }
+    "house of hades repo": { "tools": ["github"], "capability": "repo.modify" },
+    "who needs the duke": { "tools": ["notion"], "capability": "agent.registry" },
+    "who needs the Duke": { "tools": ["notion"], "capability": "agent.registry" },
+    "agent status": { "tools": ["notion"], "capability": "agent.registry" },
+    "colony status": { "tools": ["notion"], "capability": "colony.status" },
+    "needs human agents": { "tools": ["notion"], "capability": "agent.registry" },
+    "Needs Human agents": { "tools": ["notion"], "capability": "agent.registry" },
+    "open handoffs": { "tools": ["notion"], "capability": "agent.registry" },
+    "agent registry": { "tools": ["notion"], "capability": "agent.registry" },
+    "Agent Registry": { "tools": ["notion"], "capability": "agent.registry" }
   },
   "hard_rules": [
     {
@@ -38,6 +47,16 @@
       "if_contains_any": ["remind me", "set a reminder", "every two days"],
       "force_tool": "automations",
       "reason": "Reminders → Automations, not Todoist"
+    },
+    {
+      "id": "PP-ROUTE-005",
+      "if_contains_any": [
+        "who needs the duke", "needs human", "agent status", "colony status",
+        "open handoff", "agent registry", "underworld residents"
+      ],
+      "force_tool": "notion",
+      "capability": "agent.registry",
+      "reason": "Colony / Agent Registry always Notion data source"
     }
   ]
 }
