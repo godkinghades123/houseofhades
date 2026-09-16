@@ -3,6 +3,7 @@ import { MapView } from './components/MapView'
 import { SystemMap } from './components/SystemMap'
 import { AgentOsView } from './components/AgentOsView'
 import { MarketingAgentView } from './components/MarketingAgentView'
+import { AgentColonyView } from './components/AgentColonyView'
 import { Sidebar } from './components/Sidebar'
 import { KPIBar } from './components/KPIBar'
 import { DataTable } from './components/DataTable'
@@ -16,12 +17,12 @@ import {
 } from './data/live'
 import { INTEGRATION_STATUS } from './services/integrations'
 
-type ViewMode = 'ops' | 'system' | 'agent' | 'marketing'
+type ViewMode = 'ops' | 'system' | 'agent' | 'marketing' | 'colony'
 
 export default function App() {
   const [selected, setSelected] = useState<string | null>(null)
   const [filter, setFilter] = useState<string>('all')
-  const [view, setView] = useState<ViewMode>('agent')
+  const [view, setView] = useState<ViewMode>('colony')
 
   const filteredMarkers = useMemo(
     () => filterMarkers(liveMarkers, filter),
@@ -39,7 +40,9 @@ export default function App() {
         ? 'Atlanta ops'
         : view === 'marketing'
           ? 'Marketing agent'
-          : 'Agent OS'
+          : view === 'colony'
+            ? 'Agent Colony'
+            : 'Agent OS'
 
   return (
     <div className="h-screen flex flex-col bg-hades-bg text-white overflow-hidden">
@@ -52,6 +55,7 @@ export default function App() {
           <div className="ml-2 flex rounded-md border border-hades-border overflow-hidden text-xs">
             {(
               [
+                ['colony', 'Colony'],
                 ['agent', 'Agent OS'],
                 ['marketing', 'Marketing'],
                 ['system', 'System Map'],
@@ -102,6 +106,7 @@ export default function App() {
 
         <div className="flex-1 flex flex-col min-w-0 min-h-0">
           <div className="flex-1 relative min-h-0 overflow-hidden">
+            {view === 'colony' && <AgentColonyView />}
             {view === 'agent' && <AgentOsView />}
             {view === 'marketing' && <MarketingAgentView />}
             {view === 'system' && (
