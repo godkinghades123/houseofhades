@@ -30,7 +30,10 @@ export default function App() {
   )
 
   const syncLabel = new Date(LAST_SYNCED).toLocaleString('en-US', {
-    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   })
 
   const viewLabel =
@@ -45,14 +48,20 @@ export default function App() {
             : 'Agent OS'
 
   return (
-    <div className="h-screen flex flex-col bg-hades-bg text-white overflow-hidden">
-      <header className="h-12 shrink-0 border-b border-hades-border flex items-center justify-between px-4 bg-hades-panel/80 backdrop-blur z-20">
+    <div className="h-screen flex flex-col bg-hades-bg text-white overflow-hidden font-sans">
+      <header className="h-12 shrink-0 border-b border-hades-border flex items-center justify-between px-4 bg-hades-purple-deep/90 backdrop-blur z-20">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-7 h-7 rounded bg-hades-accent flex items-center justify-center text-xs font-bold shrink-0">H</div>
-          <span className="font-semibold tracking-wide shrink-0">HADES Ops</span>
-          <span className="text-hades-muted text-xs shrink-0">· Atlanta</span>
+          <div className="w-7 h-7 rounded bg-hades-red flex items-center justify-center text-[10px] font-ui font-bold shrink-0 shadow-hades-glow">
+            H
+          </div>
+          <span className="font-display text-xl tracking-brand leading-none shrink-0">
+            HADES
+          </span>
+          <span className="text-hades-silver-dim text-[10px] font-ui tracking-wider shrink-0 hidden sm:inline">
+            OPS · ATLANTA
+          </span>
 
-          <div className="ml-2 flex rounded-md border border-hades-border overflow-hidden text-xs">
+          <div className="ml-2 flex rounded-md border border-hades-border overflow-hidden text-[11px] font-ui tracking-wide">
             {(
               [
                 ['colony', 'Colony'],
@@ -64,11 +73,14 @@ export default function App() {
             ).map(([id, label]) => (
               <button
                 key={id}
-                onClick={() => { setView(id); setSelected(null) }}
-                className={`px-2.5 py-1 transition whitespace-nowrap ${
+                onClick={() => {
+                  setView(id)
+                  setSelected(null)
+                }}
+                className={`px-2.5 py-1 transition whitespace-nowrap uppercase ${
                   view === id
-                    ? 'bg-hades-accent text-white'
-                    : 'bg-transparent text-hades-muted hover:text-white'
+                    ? 'bg-hades-red text-white'
+                    : 'bg-transparent text-hades-muted hover:text-white hover:bg-hades-elevated'
                 }`}
               >
                 {label}
@@ -76,21 +88,21 @@ export default function App() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-4 text-xs text-hades-muted shrink-0">
-          <span>
-            Synced {syncLabel}{' '}
+        <div className="flex items-center gap-4 text-[10px] text-hades-muted shrink-0 font-ui tracking-wide">
+          <span className="hidden md:inline">
+            SYNCED {syncLabel}{' '}
             <a
               href={OPS_MAP_SYNC_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-hades-cyan hover:underline ml-1"
+              className="text-hades-silver hover:text-white hover:underline ml-1"
             >
-              Run sync →
+              RUN SYNC →
             </a>
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-hades-green animate-pulse" />
-            PP Online
+            <span className="w-2 h-2 rounded-full bg-hades-red animate-pulse shadow-hades-glow" />
+            PP ONLINE
           </span>
         </div>
       </header>
@@ -123,21 +135,25 @@ export default function App() {
 
           {view === 'ops' && (
             <div className="h-56 shrink-0 border-t border-hades-border bg-hades-panel overflow-auto">
-              <DataTable rows={liveTableRows} selected={selected} onSelect={setSelected} />
+              <DataTable
+                rows={liveTableRows}
+                selected={selected}
+                onSelect={setSelected}
+              />
             </div>
           )}
         </div>
       </div>
 
-      <div className="h-6 shrink-0 border-t border-hades-border bg-hades-panel/80 flex items-center px-3 text-[10px] text-hades-muted gap-4">
-        <span>View: {viewLabel}</span>
+      <div className="h-6 shrink-0 border-t border-hades-border bg-hades-panel flex items-center px-3 text-[10px] text-hades-muted gap-4 font-ui tracking-wide">
+        <span>VIEW: {viewLabel.toUpperCase()}</span>
         {view === 'ops' && filter !== 'all' && (
-          <span className="text-hades-cyan">Filter: {filter}</span>
+          <span className="text-hades-silver">FILTER: {filter}</span>
         )}
-        <span>Notion: {INTEGRATION_STATUS.notion}</span>
-        <span>Engine: {INTEGRATION_STATUS.engine}</span>
-        <span>GitHub Issues: {INTEGRATION_STATUS.github}</span>
-        <span>Marketing: {INTEGRATION_STATUS.marketing}</span>
+        <span>NOTION: {INTEGRATION_STATUS.notion}</span>
+        <span>ENGINE: {INTEGRATION_STATUS.engine}</span>
+        <span>GITHUB: {INTEGRATION_STATUS.github}</span>
+        <span>MARKETING: {INTEGRATION_STATUS.marketing}</span>
       </div>
     </div>
   )

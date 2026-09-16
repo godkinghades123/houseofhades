@@ -1,6 +1,6 @@
 /**
  * HADES Operating System — page graph
- * How Headquarters and the head pages connect and pass information.
+ * KIND colors locked to official brand board (purple / red / silver / black family)
  */
 
 export type NodeKind =
@@ -27,7 +27,6 @@ export interface OsEdge {
   from: string
   to: string
   label: string
-  /** primary = main operating flow */
   weight: 'primary' | 'secondary'
 }
 
@@ -152,12 +151,13 @@ export const OS_EDGES: OsEdge[] = [
   { id: 'e16', from: 'pp', to: 'github', label: 'sync / issues', weight: 'secondary' },
 ]
 
+/** Official board: purple power · red intensity · silver precision */
 export const KIND_COLOR: Record<NodeKind, string> = {
-  hub: '#7c3aed',
-  memory: '#22d3ee',
-  research: '#a78bfa',
-  execution: '#f59e0b',
-  capital: '#10b981',
-  brand: '#ef4444',
-  learning: '#ec4899',
+  hub: '#e10600',
+  memory: '#3b1f6e',
+  research: '#c0c0c0',
+  execution: '#8a8a8a',
+  capital: '#e10600',
+  brand: '#3b1f6e',
+  learning: '#c0c0c0',
 }

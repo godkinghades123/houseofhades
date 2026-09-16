@@ -2,24 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
+:root {
+  --hades-bg: #0a0a0a;
+  --hades-panel: #111111;
+  --hades-elevated: #1a1a1a;
+  --hades-border: #2a2a2a;
+  --hades-purple: #3b1f6e;
+  --hades-purple-deep: #1a0a3c;
+  --hades-red: #e10600;
+  --hades-silver: #c0c0c0;
+  --hades-muted: #8a8a8a;
+  --hades-text: #f5f5f5;
+}
+
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
-  background: #0b0d17;
+  background: var(--hades-bg);
+  color: var(--hades-text);
+  font-family: Montserrat, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display titles — Bebas Neue */
+.hades-display {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* UI labels / nav — Oswald */
+.hades-ui {
+  font-family: Oswald, system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Section headers */
+.hades-section-label {
+  font-family: Oswald, system-ui, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hades-muted);
+}
+
+/* Cards */
+.hades-card {
+  background: var(--hades-panel);
+  border: 1px solid var(--hades-border);
+  border-radius: 0.5rem;
+}
+
+.hades-card-header {
+  background: rgba(59, 31, 110, 0.25);
+  border-bottom: 1px solid var(--hades-border);
 }
 
 /* Leaflet dark tweaks */
 .leaflet-container {
-  background: #0b0d17 !important;
+  background: var(--hades-bg) !important;
   font-family: inherit;
 }
 
 .leaflet-control-attribution {
-  background: rgba(11, 13, 23, 0.8) !important;
-  color: #64748b !important;
+  background: rgba(10, 10, 10, 0.85) !important;
+  color: var(--hades-muted) !important;
 }
 
-/* System map — animated flow dashes */
 .flow-dash {
   animation: flow-move 1.2s linear infinite;
 }
@@ -43,4 +95,20 @@ html, body, #root {
     r: 48;
     opacity: 0;
   }
+}
+
+/* Scrollbar on-brand */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--hades-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hades-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hades-purple);
 }

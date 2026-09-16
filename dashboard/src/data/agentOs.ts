@@ -1,6 +1,6 @@
 /**
  * How House of Hades runs — Stage 1 Agent OS
- * Honest map: real tools only, no 2035 SaaS stack.
+ * Colors locked to official brand board: purple / black / red / silver
  */
 
 export interface BusinessPillar {
@@ -19,7 +19,7 @@ export interface OsLayer {
   nodes: string[]
 }
 
-/** Left column — THE BUSINESS */
+/** Left column — THE BUSINESS — on-brand accents only */
 export const BUSINESS_PILLARS: BusinessPillar[] = [
   {
     id: 'marketing',
@@ -28,7 +28,7 @@ export const BUSINESS_PILLARS: BusinessPillar[] = [
     tools: ['Instagram', 'Buffer API', 'tools/marketing', 'Highlights'],
     stage1Truth:
       '~1k followers · Buffer draft-gated · @houseofhadesinc migration open',
-    color: '#38bdf8',
+    color: '#c0c0c0', // silver — precision
   },
   {
     id: 'sales',
@@ -36,7 +36,7 @@ export const BUSINESS_PILLARS: BusinessPillar[] = [
     title: 'SALES / OFFERS',
     tools: ['Gumroad', 'Bio taps', 'ETF Masterclass'],
     stage1Truth: 'Courses live · revenue tracked weekly · no fake funnel',
-    color: '#4ade80',
+    color: '#e10600', // red — intensity
   },
   {
     id: 'operations',
@@ -44,7 +44,7 @@ export const BUSINESS_PILLARS: BusinessPillar[] = [
     title: 'OPERATIONS',
     tools: ['Headquarters', 'GitHub Issues', 'Amazon bridge', 'Water'],
     stage1Truth: 'Amazon $18.50/hr bridge · water $50–75/wk toward rent',
-    color: '#fb923c',
+    color: '#3b1f6e', // purple — power
   },
   {
     id: 'followup',
@@ -52,19 +52,18 @@ export const BUSINESS_PILLARS: BusinessPillar[] = [
     title: 'FOLLOW-UP / CADENCE',
     tools: ['Signal Log', 'Cadence slots', 'PP Learning'],
     stage1Truth: 'Mon Tip / Wed Edu / Phil / Sat Blueprint · Tip 007 live',
-    color: '#c084fc',
+    color: '#8a8a8a', // silver-dim
   },
   {
     id: 'finance',
     n: 5,
     title: 'FINANCE',
     tools: ['Engine', 'KeyBank', 'Treasury', 'Chime'],
-    stage1Truth: 'Engine ~$287 Phase 1 · KeyBank ~$65 under $700 floor',
-    color: '#f472b6',
+    stage1Truth: 'Engine ~$287 Phase 1 · KeyBank under $700 floor',
+    color: '#e10600', // red
   },
 ]
 
-/** Right column — THE AI OPERATING SYSTEM */
 export const AI_OS_LAYERS: OsLayer[] = [
   {
     id: 'orchestrator',
