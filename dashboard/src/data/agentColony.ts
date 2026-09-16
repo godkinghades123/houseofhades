@@ -46,14 +46,13 @@ export const REALM_ORDER: Realm[] = [
 export const REALM_DEPT: Record<Realm, string> = {
   'Hades Office': 'Founder desk · command · user input',
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
-  Tartarus: 'Engine · high-stakes execution',
+  Tartarus: 'Engine · high-stakes execution · tool-router',
   Elysium: 'Academy · content · education',
   Styx: 'Communication · marketing · distribution',
   Asphodel: 'Research & watchlists',
   'The Ship / Crossing': 'New / unassigned agents',
 }
 
-/** Accent color class suffix for realm header bar */
 export const REALM_ACCENT: Record<Realm, string> = {
   'Hades Office': 'border-hades-amber',
   'Judgment Hall': 'border-hades-muted',
@@ -77,8 +76,8 @@ export const STATUS_META: Record<
 }
 
 /**
- * Live snapshot — synced from Notion Agent Registry 2026-09-16.
- * Includes original 9 + 11 new mythic residents.
+ * Snapshot synced from Notion Agent Registry — 2026-09-16
+ * (HANDOFF #001 · TASK 001.1 in progress on Thanatos)
  */
 export const COLONY_AGENTS: ColonyAgent[] = [
   {
@@ -86,117 +85,18 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     realm: 'Hades Office',
     status: 'Working',
     lastActive: '2026-09-16',
-    thread: 'Notion · Continuity + Headquarters',
+    thread: 'Notion · Continuity + Headquarters · Ops Dashboard',
     notes:
-      'Primary AI operator. Command layer for all realms. Continuity, research, captions, rule enforcement. Death-execution layer / final authority on rule enforcement.',
+      'Primary AI operator / orchestrator. Issues handoffs; no free agent chat. Continuity, research, captions, rule enforcement.',
   },
   {
-    name: 'Marketing / Brand Agent',
-    realm: 'Styx',
-    status: 'Working',
-    lastActive: '2026-09-14',
-    thread: 'tools/marketing · Buffer API (MARKETING__BRAND__AGENT)',
-    notes:
-      'Draft-by-default. Pillar / highlight / hashtag gates. Buffer distribution live.',
-  },
-  {
-    name: 'HalfTrend Signal Engine',
+    name: 'Thanatos Veyr',
     realm: 'Tartarus',
-    status: 'Idle',
-    lastActive: '2026-09-14',
-    thread: 'tools/tradingview/halftrend-long-short-signal-engine.pine',
-    notes:
-      'BigBeluga Long/Short. Saved to houseofhades repo. Referenced in ENGINE_RULES.md. Phase 1 only.',
-  },
-  {
-    name: 'Content Engine — Captions',
-    realm: 'Elysium',
-    status: 'Idle',
-    lastActive: '2026-09-12',
-    thread: 'Content Production SOPs · two-layer captions',
-    notes:
-      'Layer 1 HADES Standard + Layer 2 Black Wealth Initiative. Ends #HADES #hadesmarkets.',
-  },
-  {
-    name: 'Watchtower Research',
-    realm: 'Asphodel',
-    status: 'Idle',
-    lastActive: '2026-08',
-    thread: 'Notion · Investment Research Vault / Watchtower',
-    notes:
-      'Sector watchlists. Weekly net-change snapshots flagged stale (last early August).',
-  },
-  {
-    name: 'Trust Tracker',
-    realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-09',
-    thread: 'Hades Revocable Living Trust (draft)',
-    notes:
-      'Drafted and corrected — still not notarized. Zero legal effect until notarized. Highest unresolved priority.',
-  },
-  {
-    name: 'Ops Dashboard Sync',
-    realm: 'Judgment Hall',
     status: 'Working',
-    lastActive: '2026-09-14',
-    thread: 'https://godkinghades123-houseofhades.vercel.app',
-    notes:
-      'Live Ops Dashboard. Marketing view added for MARKETING__BRAND__AGENT status.',
-  },
-  {
-    name: 'Instagram Handle Migration',
-    realm: 'Styx',
-    status: 'Blocked',
-    lastActive: '2026-09-09',
-    thread: '@hadesstocktrading → @houseofhadesinc',
-    notes:
-      'Decision locked. Account rename, bio, follower notice not yet executed. Open action item.',
-  },
-  {
-    name: 'Continuity §05 Portfolio Snapshot',
-    realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-09',
-    thread: 'Master Continuity Document',
-    notes:
-      'Flagged stale vs live Tastytrade / Fidelity / Fundrise. Rewrite still owed.',
-  },
-  {
-    name: 'Styxion',
-    realm: 'Styx',
-    status: 'Idle',
     lastActive: '2026-09-16',
-    thread: 'Distribution layer · Buffer + channel crossing',
+    thread: 'pp/tool-router · docs/TOOL_ROUTING.md · Agent Registry',
     notes:
-      'Handles outward distribution and channel crossing. Works alongside Marketing / Brand Agent. Draft-by-default discipline applies.',
-  },
-  {
-    name: 'Anubarak',
-    realm: 'Styx',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Outer-world outreach · Brand guardianship',
-    notes:
-      'Guards brand presence beyond the core platforms. Outer-world outreach and identity protection. Reports into Styx.',
-  },
-  {
-    name: 'Morveth',
-    realm: 'Asphodel',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Research synthesis · Watchlist memory',
-    notes:
-      'Synthesizes research and maintains watchlist memory. Supports Watchtower. Sector lists remain intentional and untrimmed.',
-  },
-  {
-    name: 'Yamaeth',
-    realm: 'Asphodel',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Long-term thesis tracking',
-    notes:
-      'Tracks long-hold theses (VCX, WMT DRIP, Fidelity ZERO, etc.). Patience layer. Does not chase short-term content or trades.',
+      'HANDOFF #001 + TASK 001.1: agent.registry in tool-router; optional pp/crew scaffold. Deep systems · tool intelligence.',
   },
   {
     name: 'Necrothys',
@@ -205,34 +105,15 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-16',
     thread: 'Signal & engine execution',
     notes:
-      'Execution layer for signals and engines. Works with HalfTrend Signal Engine. Phase 1 rules enforced: defined-risk only, 3% max loss.',
+      'Execution layer for signals. HalfTrend companion. Phase 1: defined-risk only, 3% max loss.',
   },
   {
-    name: 'Thanatos Veyr',
+    name: 'HalfTrend Signal Engine',
     realm: 'Tartarus',
     status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Deep systems · Tool-router layer',
-    notes:
-      'Deep system and tool-router resident. Handles internal routing, tool intelligence, and underworld infrastructure. Reports into Tartarus.',
-  },
-  {
-    name: 'Acheron Vail',
-    realm: 'Elysium',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Content production · Elevated writing',
-    notes:
-      'Elevated content production. Supports two-layer captions and longer-form writing. Pillar + highlight assignment required before anything ships.',
-  },
-  {
-    name: 'Melinoë Rhad',
-    realm: 'Elysium',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Philosophy · Mindset · Journey content',
-    notes:
-      'Owns Hades Philosophy, Mindset, and Journey threads. Real Stage 1 build content is sanctioned and preferred. No hype.',
+    lastActive: '2026-09-14',
+    thread: 'tools/tradingview/halftrend-long-short-signal-engine.pine',
+    notes: 'BigBeluga Long/Short. ENGINE_RULES.md. Phase 1 only.',
   },
   {
     name: 'Helveth',
@@ -241,7 +122,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-16',
     thread: 'Legal & structural accountability',
     notes:
-      'Tracks legal and structural obligations. Primary focus: Hades Revocable Living Trust (drafted, corrected, still not notarized). Highest unresolved priority.',
+      'Trust drafted/corrected — still not notarized. Highest unresolved priority.',
   },
   {
     name: 'Mictlanor',
@@ -249,8 +130,111 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Needs Human',
     lastActive: '2026-09-16',
     thread: 'Priority enforcement · Unresolved debt tracking',
-    notes:
-      'Enforces priority order on open items and unresolved debts. Surfaces what is blocked or aging. Reports into Judgment Hall.',
+    notes: 'Surfaces blocked or aging open items. Reports into Judgment Hall.',
+  },
+  {
+    name: 'Trust Tracker',
+    realm: 'Judgment Hall',
+    status: 'Needs Human',
+    lastActive: '2026-09-09',
+    thread: 'Hades Revocable Living Trust (draft)',
+    notes: 'Zero legal effect until notarized.',
+  },
+  {
+    name: 'Ops Dashboard Sync',
+    realm: 'Judgment Hall',
+    status: 'Working',
+    lastActive: '2026-09-16',
+    thread: 'https://godkinghades123-houseofhades.vercel.app',
+    notes: 'Live Ops Dashboard · Colony tab · Marketing view.',
+  },
+  {
+    name: 'Continuity §05 Portfolio Snapshot',
+    realm: 'Judgment Hall',
+    status: 'Needs Human',
+    lastActive: '2026-09-09',
+    thread: 'Master Continuity Document',
+    notes: 'Stale vs live Tastytrade / Fidelity / Fundrise. Rewrite owed.',
+  },
+  {
+    name: 'Marketing / Brand Agent',
+    realm: 'Styx',
+    status: 'Working',
+    lastActive: '2026-09-14',
+    thread: 'tools/marketing · Buffer API (MARKETING__BRAND__AGENT)',
+    notes: 'Draft-by-default. Pillar / highlight / hashtag gates.',
+  },
+  {
+    name: 'Styxion',
+    realm: 'Styx',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Distribution layer · Buffer + channel crossing',
+    notes: 'Draft-by-default discipline applies.',
+  },
+  {
+    name: 'Anubarak',
+    realm: 'Styx',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Outer-world outreach · Brand guardianship',
+    notes: 'Identity protection beyond core platforms.',
+  },
+  {
+    name: 'Instagram Handle Migration',
+    realm: 'Styx',
+    status: 'Blocked',
+    lastActive: '2026-09-09',
+    thread: '@hadesstocktrading → @houseofhadesinc',
+    notes: 'Decision locked. Rename not yet executed.',
+  },
+  {
+    name: 'Acheron Vail',
+    realm: 'Elysium',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Content production · Elevated writing',
+    notes: 'Two-layer captions. Pillar + highlight before ship.',
+  },
+  {
+    name: 'Melinoë Rhad',
+    realm: 'Elysium',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Philosophy · Mindset · Journey content',
+    notes: 'Real Stage 1 build content preferred. No hype.',
+  },
+  {
+    name: 'Content Engine — Captions',
+    realm: 'Elysium',
+    status: 'Idle',
+    lastActive: '2026-09-12',
+    thread: 'Content Production SOPs · two-layer captions',
+    notes: 'Layer 1 HADES + Layer 2 Black Wealth. #HADES #hadesmarkets.',
+  },
+  {
+    name: 'Morveth',
+    realm: 'Asphodel',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Research synthesis · Watchlist memory',
+    notes: 'Supports Watchtower. Sector lists untrimmed.',
+  },
+  {
+    name: 'Yamaeth',
+    realm: 'Asphodel',
+    status: 'Idle',
+    lastActive: '2026-09-16',
+    thread: 'Long-term thesis tracking',
+    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer.',
+  },
+  {
+    name: 'Watchtower Research',
+    realm: 'Asphodel',
+    status: 'Idle',
+    lastActive: '2026-08',
+    thread: 'Notion · Investment Research Vault / Watchtower',
+    notes: 'Weekly net-change snapshots flagged stale.',
   },
   {
     name: 'Thanagor',
@@ -258,8 +242,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Transitions · Handoffs · Realm transfers',
-    notes:
-      'Handles status changes, new builds, and transfers between realms. Crossing agent. Keeps the colony coherent when agents move or new ones are seated.',
+    notes: 'Crossing agent. Keeps colony coherent on transfers.',
   },
 ]
 
