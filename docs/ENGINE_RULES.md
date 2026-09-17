@@ -5,15 +5,14 @@
 
 ## Risk
 
-- **Default max loss per trade:** ≤ **3%** of Engine Net Liq  
-- **≤ 8%** only with a full evidence stack (rare; still journaled)  
+- **Default max loss per trade:** ≤ **7%** of Engine Net Liq  
 - Respect **OPT BP / buying power** — never size past what the platform allows  
 - **Cash floors** (KeyBank) still apply before adding Engine cash  
 
 ## Options
 
 - **Defined risk only** (hard Engine rule)  
-- Max loss must be known *before* entry and ≤ 3% Net Liq (and ≤ available BP)  
+- Max loss must be known *before* entry and ≤ **7%** Net Liq (and ≤ available BP)  
 - Undefined-risk structures are out of policy in Phase 1  
 
 ## Engine Indicator Checklist (before any Engine entry)
@@ -27,7 +26,7 @@ Any **NO** → no trade.
 5. Momentum — RSI constructive **with** structure, not alone  
 6. Volume — participation confirms the move or reaction  
 7. Stop + invalidation — written **before** size  
-8. Risk size — ≤ 3% Engine equity (≤ 8% only with full stack); cash floors respected  
+8. Risk size — ≤ **7%** Engine equity; cash floors respected  
 9. Journal — Signal Log / Trade Log updated  
 
 ## Approved chart tools
@@ -52,3 +51,5 @@ Indicator levels feed the written HADES format; they never replace it.
 - Consumer vs investor: Engine is a machine for **capital to fund the business**, not dopamine  
 
 Logged also in Scroll Library / Academy Module 02 (Notion).
+
+**Rule change log:** 2026-09-17 — Phase 1 max loss raised **3% → 7%** (defined-risk only unchanged).
