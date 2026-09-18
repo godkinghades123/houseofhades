@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Sync Ops Map meta from Notion Headquarters + GitHub Issues.
+Sync Ops Map meta from Notion Headquarters + GitHub Issues + optional live Engine.
 
 Writes: dashboard/src/data/synced_meta.json
 
@@ -11,9 +11,12 @@ Required env:
 Optional:
   GITHUB_TOKEN         - auto-provided in Actions; used for open issues
   GITHUB_REPO          - default godkinghades123/houseofhades
+  TASTYTRADE_CLIENT_SECRET + TASTYTRADE_REFRESH_TOKEN
+                       - when present, live Engine balances override HQ Net Liq parse
+  TASTYTRADE_CLIENT_ID, TASTYTRADE_ACCOUNT_NUMBER, TASTYTRADE_ENV
 
-HQ page is freeform markdown-ish blocks. We pull plain text and parse
-known Stage 1 numbers with regex (Net Liq, KeyBank, etc.).
+HQ page is freeform. We pull plain text and parse Stage 1 numbers with regex.
+Live Tastytrade is preferred for engine.netLiq when secrets are set.
 """
 
 from __future__ import annotations
@@ -35,6 +38,9 @@ NOTION_VERSION = "2022-06-28"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUT_FILE = REPO_ROOT / "dashboard" / "src" / "data" / "synced_meta.json"
+
+# Allow `python scripts/sync_ops_map.py` to import tools.engine
+sys.path.insert(0, str(REPO_ROOT))
 
 
 def die(msg: str) -> None:
@@ -114,7 +120,6 @@ def fetch_github_issues() -> list[dict]:
     }
     resp = requests.get(url, headers=headers, timeout=30)
     if resp.status_code != 200:
-        # Soft-fail: HQ sync should still succeed if issues are blocked
         print(
             f"WARN: GitHub issues {resp.status_code} — proceeding without issue data. "
             f"Body: {resp.text[:300]}",
@@ -160,6 +165,28 @@ def fetch_github_issues() -> list[dict]:
     return issues
 
 
+def try_live_engine() -> dict | None:
+    """Pull live Engine balances when Tastytrade secrets are present. Soft-fail."""
+    if not os.environ.get("TASTYTRADE_CLIENT_SECRET") or not os.environ.get(
+        "TASTYTRADE_REFRESH_TOKEN"
+    ):
+        print("INFO: Tastytrade secrets not set — Engine Net Liq from HQ parse only")
+        return None
+    try:
+        from tools.engine.client import fetch_engine_snapshot
+
+        snap = fetch_engine_snapshot()
+        print(
+            f"INFO: Live Engine account={snap.get('accountNumber')} "
+            f"netLiq={snap.get('netLiq')} env={snap.get('env')}",
+            file=sys.stderr,
+        )
+        return snap
+    except Exception as e:
+        print(f"WARN: Live Engine pull failed — falling back to HQ parse: {e}", file=sys.stderr)
+        return None
+
+
 def main() -> None:
     if not NOTION_API_KEY or not NOTION_HQ_PAGE_ID:
         die("NOTION_API_KEY and NOTION_HQ_PAGE_ID must be set")
@@ -185,6 +212,20 @@ def main() -> None:
     groundfloor = parse_money(text, [r"Groundfloor[^\d]*~?\$?([\d.]+)"], 30.11)
     fidelity = parse_money(text, [r"Fidelity Go[^\d]*~?\$?([\d.]+)"], 80.0)
 
+    engine_live = try_live_engine()
+    options_bp = 110.0
+    engine_source = "notion-hq-parse"
+    account_number = None
+    cash_balance = None
+
+    if engine_live and engine_live.get("netLiq") is not None:
+        net_liq = float(engine_live["netLiq"])
+        if engine_live.get("optionsBuyingPower") is not None:
+            options_bp = float(engine_live["optionsBuyingPower"])
+        engine_source = "tastytrade-live"
+        account_number = engine_live.get("accountNumber")
+        cash_balance = engine_live.get("cashBalance")
+
     issues = fetch_github_issues()
     open_count = len(issues)
 
@@ -207,7 +248,7 @@ def main() -> None:
             "type": "Position",
             "status": "Active",
             "owner": "PP",
-            "updated": "Live",
+            "updated": "Live" if engine_source == "tastytrade-live" else "HQ",
             "priority": "high",
         }
     )
@@ -220,17 +261,28 @@ def main() -> None:
 
     high = sum(1 for i in issues if i["priority"] == "high")
 
+    engine_block: dict = {
+        "netLiq": net_liq,
+        "phase": 1,
+        "ytd": "red",
+        "maxLossPct": 7,
+        "optionsBuyingPower": options_bp,
+        "rule": "Defined-risk options only",
+        "source": engine_source,
+    }
+    if account_number:
+        engine_block["accountNumber"] = account_number
+    if cash_balance is not None:
+        engine_block["cashBalance"] = cash_balance
+
     payload = {
         "syncedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "source": "Notion HQ + GitHub Issues (sync_ops_map.py)",
-        "engine": {
-            "netLiq": net_liq,
-            "phase": 1,
-            "ytd": "red",
-            "maxLossPct": 3,
-            "optionsBuyingPower": 110,
-            "rule": "Defined-risk options only",
-        },
+        "source": (
+            "Notion HQ + GitHub Issues + Tastytrade Engine"
+            if engine_source == "tastytrade-live"
+            else "Notion HQ + GitHub Issues (sync_ops_map.py)"
+        ),
+        "engine": engine_block,
         "cash": {
             "chime": chime,
             "keybank": keybank,
@@ -246,7 +298,7 @@ def main() -> None:
             {
                 "label": "Engine Net Liq",
                 "value": f"${net_liq:g}",
-                "change": "Phase 1",
+                "change": "Phase 1 · live" if engine_source == "tastytrade-live" else "Phase 1",
                 "tone": "neutral",
             },
             {

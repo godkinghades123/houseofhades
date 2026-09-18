@@ -1,6 +1,6 @@
 name: Ops Map Sync
 
-# Pulls Headquarters + open GitHub Issues into dashboard/src/data/synced_meta.json
+# Pulls Headquarters + open GitHub Issues + optional live Engine into synced_meta.json
 on:
   schedule:
     - cron: "15 9 * * *"   # daily 09:15 UTC
@@ -31,6 +31,11 @@ jobs:
           NOTION_HQ_PAGE_ID: ${{ secrets.NOTION_HQ_PAGE_ID }}
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPO: godkinghades123/houseofhades
+          TASTYTRADE_CLIENT_SECRET: ${{ secrets.TASTYTRADE_CLIENT_SECRET }}
+          TASTYTRADE_REFRESH_TOKEN: ${{ secrets.TASTYTRADE_REFRESH_TOKEN }}
+          TASTYTRADE_CLIENT_ID: ${{ secrets.TASTYTRADE_CLIENT_ID }}
+          TASTYTRADE_ACCOUNT_NUMBER: ${{ secrets.TASTYTRADE_ACCOUNT_NUMBER }}
+          TASTYTRADE_ENV: ${{ secrets.TASTYTRADE_ENV }}
         run: python scripts/sync_ops_map.py
 
       - name: Commit synced_meta.json if changed
@@ -41,6 +46,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes"
           else
-            git commit -m "chore(ops-map): sync Headquarters + Issues into synced_meta.json"
+            git commit -m "chore(ops-map): sync Headquarters + Issues + Engine into synced_meta.json"
             git push
           fi
