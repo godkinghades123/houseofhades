@@ -19,7 +19,12 @@
     "Needs Human agents": { "tools": ["notion"], "capability": "agent.registry" },
     "open handoffs": { "tools": ["notion"], "capability": "agent.registry" },
     "agent registry": { "tools": ["notion"], "capability": "agent.registry" },
-    "Agent Registry": { "tools": ["notion"], "capability": "agent.registry" }
+    "Agent Registry": { "tools": ["notion"], "capability": "agent.registry" },
+    "engine net liq": { "tools": ["engine"], "capability": "engine.get_balances" },
+    "tastytrade balances": { "tools": ["engine"], "capability": "engine.get_balances" },
+    "engine balances": { "tools": ["engine"], "capability": "engine.get_balances" },
+    "balance snapshots": { "tools": ["engine"], "capability": "engine.get_balance_snapshots" },
+    "engine snapshots": { "tools": ["engine"], "capability": "engine.get_balance_snapshots" }
   },
   "hard_rules": [
     {
@@ -57,6 +62,16 @@
       "force_tool": "notion",
       "capability": "agent.registry",
       "reason": "Colony / Agent Registry always Notion data source"
+    },
+    {
+      "id": "PP-ROUTE-006",
+      "if_contains_any": [
+        "engine net liq", "tastytrade balance", "engine balances",
+        "balance snapshot", "options buying power", "net liquidating"
+      ],
+      "force_tool": "engine",
+      "capability": "engine.get_balances",
+      "reason": "Live Engine balances/snapshots → tools/engine (Thanatos / Tartarus). Read-only."
     }
   ]
 }

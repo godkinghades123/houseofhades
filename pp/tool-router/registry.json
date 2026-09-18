@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
-  "updated": "2026-09-16",
+  "version": "1.3.0",
+  "updated": "2026-09-18",
   "description": "PP cheap capability index. Route first; load only matched tools.",
   "split_rule": {
     "github": "execution",
@@ -10,7 +10,8 @@
     "calendar": "time",
     "gmail": "comms",
     "drive": "files",
-    "voice": "audio"
+    "voice": "audio",
+    "engine": "tastytrade_read_only"
   },
   "tools": {
     "github": {
@@ -44,6 +45,31 @@
       ],
       "default_lane": "memory",
       "note": "MCP v2.0.0: use data_source_* tools. Agent Registry data_source_id=017022ce-01c4-426a-a013-cd62407da630. See docs/NOTION_MCP_V2.md."
+    },
+    "engine": {
+      "display": "Engine (Tastytrade)",
+      "status": "connected_read_only",
+      "owner_agent": "Thanatos Veyr",
+      "realm": "Tartarus",
+      "keywords": [
+        "engine", "tastytrade", "tasty", "net liq", "net-liq", "net liquidating",
+        "balance snapshot", "balance-snapshots", "account balances",
+        "options buying power", "derivative buying power", "engine net liq",
+        "phase 1 balances"
+      ],
+      "capabilities": [
+        "engine.get_balances",
+        "engine.get_balance_snapshots"
+      ],
+      "default_lane": "engine",
+      "gates": [
+        "Phase 1 defined-risk only",
+        "No order submission",
+        "No auto-trade",
+        "Account lock via /customers/me/accounts + optional TASTYTRADE_ACCOUNT_NUMBER"
+      ],
+      "impl": "tools/engine/client.py",
+      "note": "Read-only. Live path also feeds Ops Map Sync → synced_meta.json. Owner: Thanatos Veyr (tool-router)."
     },
     "linear": {
       "display": "Linear",
@@ -134,6 +160,18 @@
       "mcp_tool": "query-data-source",
       "data_source_id": "017022ce-01c4-426a-a013-cd62407da630",
       "examples": ["colony status", "underworld residents"]
+    },
+    "engine.get_balances": {
+      "tool": "engine",
+      "impl": "tools/engine/client.py::get_balances / fetch_engine_snapshot",
+      "owner_agent": "Thanatos Veyr",
+      "examples": ["engine net liq", "tastytrade balances", "current options buying power"]
+    },
+    "engine.get_balance_snapshots": {
+      "tool": "engine",
+      "impl": "tools/engine/client.py::get_balance_snapshots",
+      "owner_agent": "Thanatos Veyr",
+      "examples": ["EOD balance snapshots", "engine history", "net liq last week"]
     },
     "task.manage": { "tool": "github", "fallback": ["notion", "linear"], "examples": ["todo", "task"] },
     "reminder.create": { "tool": "automations", "examples": ["remind me in 2 weeks"] },
