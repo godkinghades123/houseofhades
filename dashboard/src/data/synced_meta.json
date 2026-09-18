@@ -1,13 +1,14 @@
 {
-  "syncedAt": "2026-09-17T09:30:05Z",
+  "syncedAt": "2026-09-18T09:28:38Z",
   "source": "Notion HQ + GitHub Issues (sync_ops_map.py)",
   "engine": {
-    "netLiq": 287.0,
+    "netLiq": 245.32,
     "phase": 1,
     "ytd": "red",
-    "maxLossPct": 3,
-    "optionsBuyingPower": 110,
-    "rule": "Defined-risk options only"
+    "maxLossPct": 7,
+    "optionsBuyingPower": 110.0,
+    "rule": "Defined-risk options only",
+    "source": "notion-hq-parse"
   },
   "cash": {
     "chime": 10.0,
@@ -24,7 +25,7 @@
   "kpis": [
     {
       "label": "Engine Net Liq",
-      "value": "$287",
+      "value": "$245.32",
       "change": "Phase 1",
       "tone": "neutral"
     },
@@ -135,7 +136,7 @@
       "type": "Position",
       "status": "Active",
       "owner": "PP",
-      "updated": "Live",
+      "updated": "HQ",
       "priority": "high"
     }
   ],
