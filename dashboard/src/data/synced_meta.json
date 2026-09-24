@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-09-23T09:29:10Z",
+  "syncedAt": "2026-09-24T09:30:05Z",
   "source": "Notion HQ + GitHub Issues (sync_ops_map.py)",
   "engine": {
     "netLiq": 245.32,
@@ -21,7 +21,7 @@
     "groundfloor": 30.11
   },
   "trustNotarized": true,
-  "openIssueCount": 9,
+  "openIssueCount": 11,
   "kpis": [
     {
       "label": "Engine Net Liq",
@@ -37,8 +37,8 @@
     },
     {
       "label": "Open Issues",
-      "value": "9",
-      "change": "2 high",
+      "value": "11",
+      "change": "3 high",
       "tone": "neutral"
     },
     {
@@ -49,6 +49,51 @@
     }
   ],
   "tableRows": [
+    {
+      "id": "i17",
+      "name": "[Life] Family care load + housing instability \u2014 multi-year context",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-24",
+      "priority": "medium"
+    },
+    {
+      "id": "i16",
+      "name": "[Life] Amazon start prep \u2014 Oct 2 3:00 AM first day / training",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-24",
+      "priority": "medium"
+    },
+    {
+      "id": "i15",
+      "name": "[Brand] Execute Instagram migration \u2192 @houseofhadesinc",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-24",
+      "priority": "medium"
+    },
+    {
+      "id": "i14",
+      "name": "[Marketing] Buffer channel IDs + first draft-gated post path",
+      "type": "Task",
+      "status": "Open",
+      "owner": "PP",
+      "updated": "2026-09-24",
+      "priority": "medium"
+    },
+    {
+      "id": "i13",
+      "name": "[Exec] KeyBank build to $700 floor",
+      "type": "Task",
+      "status": "Open",
+      "owner": "Javarous",
+      "updated": "2026-09-24",
+      "priority": "high"
+    },
     {
       "id": "i12",
       "name": "[Content] Optional: true Notion GitHub Issues synced DB (separate from Signal Log)",
@@ -64,7 +109,7 @@
       "type": "Task",
       "status": "Open",
       "owner": "PP",
-      "updated": "2026-09-14",
+      "updated": "2026-09-24",
       "priority": "low"
     },
     {
@@ -77,38 +122,11 @@
       "priority": "medium"
     },
     {
-      "id": "i9",
-      "name": "[Exec] Refresh Continuity \u00a705 portfolio to live truth",
-      "type": "Task",
-      "status": "Open",
-      "owner": "PP",
-      "updated": "2026-09-05",
-      "priority": "low"
-    },
-    {
       "id": "i8",
       "name": "Stage 1 content cadence \u2014 ship next posts",
       "type": "Task",
       "status": "Open",
       "owner": "PP / Javarous",
-      "updated": "2026-09-04",
-      "priority": "medium"
-    },
-    {
-      "id": "i7",
-      "name": "Journal HIMS + CMCSA vs entry thesis",
-      "type": "Signal",
-      "status": "Open",
-      "owner": "PP",
-      "updated": "2026-09-04",
-      "priority": "medium"
-    },
-    {
-      "id": "i6",
-      "name": "VICI 2-week watch review (entry interest ~$24.96)",
-      "type": "Signal",
-      "status": "Open",
-      "owner": "PP",
       "updated": "2026-09-04",
       "priority": "medium"
     },
@@ -142,6 +160,31 @@
   ],
   "openIssueLinks": [
     {
+      "number": 17,
+      "title": "[Life] Family care load + housing instability \u2014 multi-year context",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/17"
+    },
+    {
+      "number": 16,
+      "title": "[Life] Amazon start prep \u2014 Oct 2 3:00 AM first day / training",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/16"
+    },
+    {
+      "number": 15,
+      "title": "[Brand] Execute Instagram migration \u2192 @houseofhadesinc",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/15"
+    },
+    {
+      "number": 14,
+      "title": "[Marketing] Buffer channel IDs + first draft-gated post path",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/14"
+    },
+    {
+      "number": 13,
+      "title": "[Exec] KeyBank build to $700 floor",
+      "url": "https://github.com/godkinghades123/houseofhades/issues/13"
+    },
+    {
       "number": 12,
       "title": "[Content] Optional: true Notion GitHub Issues synced DB (separate from Signal Log)",
       "url": "https://github.com/godkinghades123/houseofhades/issues/12"
@@ -157,24 +200,9 @@
       "url": "https://github.com/godkinghades123/houseofhades/issues/10"
     },
     {
-      "number": 9,
-      "title": "[Exec] Refresh Continuity \u00a705 portfolio to live truth",
-      "url": "https://github.com/godkinghades123/houseofhades/issues/9"
-    },
-    {
       "number": 8,
       "title": "Stage 1 content cadence \u2014 ship next posts",
       "url": "https://github.com/godkinghades123/houseofhades/issues/8"
-    },
-    {
-      "number": 7,
-      "title": "Journal HIMS + CMCSA vs entry thesis",
-      "url": "https://github.com/godkinghades123/houseofhades/issues/7"
-    },
-    {
-      "number": 6,
-      "title": "VICI 2-week watch review (entry interest ~$24.96)",
-      "url": "https://github.com/godkinghades123/houseofhades/issues/6"
     },
     {
       "number": 5,
