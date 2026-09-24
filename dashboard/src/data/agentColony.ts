@@ -45,7 +45,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
   Tartarus: 'Engine · high-stakes execution · tool-router',
   Elysium: 'Academy · content · education',
-  Styx: 'Drafts (Styxion) · identity (Anubarak) · Buffer',
+  Styx: 'Make/post (Marketing) · drafts (Styxion) · identity (Anubarak)',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
@@ -136,10 +136,10 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     name: 'Marketing / Brand Agent',
     realm: 'Styx',
     status: 'Working',
-    lastActive: '2026-09-14',
-    thread: 'tools/marketing · Buffer API',
+    lastActive: '2026-09-24',
+    thread: 'tools/marketing · Buffer · Pillar · Highlight · #HADES #hadesmarkets',
     notes:
-      'Buffer stack + secret + script rules. create_post gates. Styxion owns operational drafts/distribution on top.',
+      'FORMAL ROLE LOCKED 2026-09-24. Make and post HADES content under pillar / highlight / hashtag gates. Owns Buffer stack. Draft-by-default until Duke --approved. Boundary: Styxion = draft path; Anubarak = identity.',
   },
   {
     name: 'Styxion',
@@ -148,7 +148,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Drafts · Distribution · Buffer queue path · Channel crossing',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue/schedule only after human approval. Pillar + highlight + #HADES #hadesmarkets. Boundary: Marketing/Brand = stack; Anubarak = identity status.',
+      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue only after approval. Boundary: Marketing/Brand = make + gates + scripts.',
   },
   {
     name: 'Anubarak',
@@ -157,7 +157,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Identity protection · Outer platforms · Buffer channel status',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only — no auto-publish. Drift watch + @houseofhadesinc migration awareness.',
+      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only — no auto-publish.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -165,7 +165,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Blocked',
     lastActive: '2026-09-09',
     thread: '@hadesstocktrading → @houseofhadesinc',
-    notes: 'Decision locked. Rename not yet executed. Anubarak tracks outer references post-rename.',
+    notes: 'Decision locked. Rename not yet executed.',
   },
   {
     name: 'Acheron Vail',
