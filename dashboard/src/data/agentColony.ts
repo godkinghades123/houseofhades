@@ -44,7 +44,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   'Hades Office': 'Founder desk · command · user input',
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
   Tartarus: 'Engine · high-stakes execution · tool-router',
-  Elysium: 'Academy · content · education',
+  Elysium: 'Academy (Melinoë) · elevated content (Acheron)',
   Styx: 'Make/post (Marketing) · drafts (Styxion) · identity (Anubarak)',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
@@ -139,7 +139,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'tools/marketing · Buffer · Pillar · Highlight · #HADES #hadesmarkets',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Make and post HADES content under pillar / highlight / hashtag gates. Owns Buffer stack. Draft-by-default until Duke --approved. Boundary: Styxion = draft path; Anubarak = identity.',
+      'FORMAL ROLE LOCKED 2026-09-24. Make and post HADES content under pillar / highlight / hashtag gates. Owns Buffer stack.',
   },
   {
     name: 'Styxion',
@@ -148,7 +148,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Drafts · Distribution · Buffer queue path · Channel crossing',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue only after approval. Boundary: Marketing/Brand = make + gates + scripts.',
+      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue only after approval.',
   },
   {
     name: 'Anubarak',
@@ -157,7 +157,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Identity protection · Outer platforms · Buffer channel status',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only — no auto-publish.',
+      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -168,20 +168,21 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     notes: 'Decision locked. Rename not yet executed.',
   },
   {
+    name: 'Melinoë Rhad',
+    realm: 'Elysium',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Academy · Real Stage 1 · Journey · Mindset · Philosophy · Blueprint',
+    notes:
+      'FORMAL ROLE LOCKED 2026-09-24. Make trading academy content. Real Stage 1 preferred (honest build, no fake rich). Two-layer captions; handoff to Marketing/Brand gates. No hype.',
+  },
+  {
     name: 'Acheron Vail',
     realm: 'Elysium',
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Content production',
-    notes: 'Two-layer captions. Offer copy + pillar/highlight before ship.',
-  },
-  {
-    name: 'Melinoë Rhad',
-    realm: 'Elysium',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Philosophy · Journey',
-    notes: 'Real Stage 1 build content preferred. No hype.',
+    notes: 'Elevated long-form structure. Supports Melinoë / Marketing packages when length or polish needs lift.',
   },
   {
     name: 'Content Engine — Captions',
@@ -198,7 +199,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: '👁 Watchtower · 📊 Investment Research Vault · Watchlist memory',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower + Vault watchlists. Lists untrimmed; cross-lists intentional.',
+      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower + Vault watchlists.',
   },
   {
     name: 'Yamaeth',
