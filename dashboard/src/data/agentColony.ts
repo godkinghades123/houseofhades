@@ -45,7 +45,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
   Tartarus: 'Engine · high-stakes execution · tool-router',
   Elysium: 'Academy · content · education',
-  Styx: 'Communication · marketing · distribution',
+  Styx: 'Marketing · distribution · identity (Anubarak)',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
@@ -138,7 +138,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-14',
     thread: 'tools/marketing · Buffer API',
-    notes: 'Draft-by-default. Pillar / highlight / hashtag gates.',
+    notes: 'Draft-by-default. Pillar / highlight / hashtag gates. Owns create_post path.',
   },
   {
     name: 'Styxion',
@@ -146,15 +146,16 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Distribution layer · Buffer',
-    notes: 'Draft-by-default. Sales/Offers distribution path with Marketing/Brand.',
+    notes: 'Channel crossing / distribution path with Marketing/Brand.',
   },
   {
     name: 'Anubarak',
     realm: 'Styx',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Outer-world outreach',
-    notes: 'Identity protection beyond core platforms.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Identity protection · Outer platforms · Buffer channel status',
+    notes:
+      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core platforms. May use Buffer (list_channels / status) to see brand identity health. Read/status only — no auto-publish. Drift watch + @houseofhadesinc migration awareness.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -162,7 +163,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Blocked',
     lastActive: '2026-09-09',
     thread: '@hadesstocktrading → @houseofhadesinc',
-    notes: 'Decision locked. Rename not yet executed.',
+    notes: 'Decision locked. Rename not yet executed. Anubarak tracks outer references post-rename.',
   },
   {
     name: 'Acheron Vail',
@@ -195,7 +196,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: '👁 Watchtower · 📊 Investment Research Vault · Watchlist memory',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower management + Vault watchlists. Lists untrimmed; cross-lists intentional; Entry→Stop→Invalidation→Reasoning→Watchlist. Boundary vs Yamaeth (patience theses). No auto-trade.',
+      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower management + Vault watchlists. Lists untrimmed; cross-lists intentional. Boundary vs Yamaeth (patience theses).',
   },
   {
     name: 'Yamaeth',
@@ -220,7 +221,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Crossing Agent · Realm transfers · Status · New seats · Handoffs',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Crossing Agent: keeps colony coherent on transfers. Owns realm moves, status changes, new seats, handoff continuity. No auto-trade / no live publish.',
+      'FORMAL ROLE LOCKED 2026-09-24. Crossing Agent: keeps colony coherent on transfers.',
   },
 ]
 
