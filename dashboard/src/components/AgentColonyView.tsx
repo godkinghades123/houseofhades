@@ -10,6 +10,12 @@ import {
   type AgentStatus,
   type Realm,
 } from '../data/agentColony'
+import {
+  ML_PRIMITIVES,
+  ML_MODULE_PATH,
+  ML_CAPABILITY,
+  ML_OWNER,
+} from '../data/mlPrimitives'
 import { Chip, PageShell } from './ui'
 
 const STATUS_FILTERS: Array<'all' | AgentStatus> = [
@@ -25,6 +31,7 @@ const STATUS_FILTERS: Array<'all' | AgentStatus> = [
 export function AgentColonyView() {
   const [filter, setFilter] = useState<'all' | AgentStatus>('all')
   const [selected, setSelected] = useState<ColonyAgent | null>(null)
+  const [mlOpen, setMlOpen] = useState(false)
 
   const needsHuman = useMemo(
     () => COLONY_AGENTS.filter((a) => a.status === 'Needs Human'),
@@ -63,6 +70,57 @@ export function AgentColonyView() {
           </span>
         </div>
       )}
+
+      {/* ML Primitives — read-only strip (Phase-1 safe) */}
+      <div className="shrink-0 border-b border-hades-border bg-hades-panel/80">
+        <button
+          type="button"
+          onClick={() => setMlOpen((v) => !v)}
+          className="w-full px-4 py-2 flex items-center justify-between gap-3 text-left hover:bg-hades-elevated/50 transition"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-[10px] font-ui tracking-widest text-hades-silver uppercase shrink-0">
+              ML Primitives
+            </span>
+            <span className="text-[10px] text-hades-muted font-mono truncate">
+              {ML_CAPABILITY} · {ML_MODULE_PATH}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[10px] text-hades-muted font-ui hidden sm:inline">
+              {ML_OWNER}
+            </span>
+            <span className="text-[10px] text-hades-silver font-mono">
+              {mlOpen ? '−' : '+'}
+            </span>
+          </div>
+        </button>
+        {mlOpen && (
+          <div className="px-4 pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+            {ML_PRIMITIVES.map((p) => (
+              <div
+                key={p.key}
+                className="rounded-md border border-hades-border bg-hades-bg/90 px-2.5 py-2"
+              >
+                <div className="text-[11px] font-medium text-white font-sans truncate">
+                  {p.label}
+                </div>
+                <div className="text-[10px] text-hades-silver mt-0.5 leading-snug font-sans">
+                  {p.mentalModel}
+                </div>
+                <div className="text-[10px] text-hades-muted mt-1 leading-snug font-ui tracking-wide">
+                  {p.hadesUse}
+                </div>
+              </div>
+            ))}
+            <div className="sm:col-span-2 lg:col-span-5 text-[10px] text-hades-muted font-sans pt-1">
+              Explain only. No training · no prediction · no auto-trade. Call{' '}
+              <span className="font-mono text-hades-silver">ml_explain</span> via
+              tool-router during handoffs.
+            </div>
+          </div>
+        )}
+      </div>
 
       <PageShell
         eyebrow="House of Hades · Underworld Residents"
