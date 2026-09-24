@@ -40,7 +40,16 @@ db.query / data_source.query → Notion (query-data-source)
 issue.create     →  GitHub    →  new execution issue
 market.brief     →  Web+Notion→  briefing rule
 reminder.create  →  Automations
+ml.explain       →  ML        →  tools/ml/primitives.py (Phase-1 explain only)
+engine.get_balances → Engine  →  Thanatos / Tartarus (read-only)
 ```
+
+## ML Primitives (v1.4.0+)
+
+- Path: `tools/ml/` — `ml_explain(algorithm, context?) → Explanation`
+- Five algorithms: linear_regression, logistic_regression, decision_tree, svm, knn
+- Gates: explain only · no training · no prediction · no auto-trade · no live publish
+- Owner: Thanatos Veyr (Tartarus). Hard rule PP-ROUTE-007.
 
 ## Notion MCP ≥ 2.0.0
 
@@ -53,6 +62,7 @@ cd pp/tool-router
 python router.py "Update my Signal Log with this trade"
 python router.py --json "Commit this change to House of Hades"
 python router.py "Create a GitHub issue and link it to Notion"
+python router.py "Explain linear regression"
 ```
 
 ## Split (never invert)
@@ -63,6 +73,8 @@ python router.py "Create a GitHub issue and link it to Notion"
 | Memory (Continuity, HQ ops data, Signal Log) | **Notion** |
 | Reminders | **Automations** |
 | Market brief trigger | **Web + Notion Vault** |
+| ML algorithm explain | **ML Primitives** (`tools/ml`) |
+| Engine balances | **Engine** (read-only) |
 
 ## Learning loop
 
