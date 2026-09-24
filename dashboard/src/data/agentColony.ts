@@ -43,10 +43,10 @@ export const REALM_ORDER: Realm[] = [
 export const REALM_DEPT: Record<Realm, string> = {
   'Hades Office': 'Founder desk · command · user input',
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
-  Tartarus: 'Systems (Thanatos) · Engine read · ML · execution discipline',
+  Tartarus: 'Systems (Thanatos) · execution (Necrothys) · Engine',
   Elysium: 'Academy (Melinoë) · two-layer captions (Acheron)',
   Styx: 'Make/post (Marketing) · drafts (Styxion) · identity (Anubarak)',
-  Asphodel: 'Research & watchlists · Morveth Watchtower',
+  Asphodel: 'Watchlists (Morveth) · patience (Yamaeth)',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
 
@@ -90,16 +90,16 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Systems charter · tool-router · Engine read · ml.explain · agent.registry',
     notes:
-      'FORMAL ROLE LOCKED + SYSTEMS CHARTER FLUSHED 2026-09-24. Owns tool-router, Engine read-only path, ML primitives (explain only), agent.registry routing, underworld infra. No auto-trade / no order submit / no ML training. HANDOFF #001 tasks sit under charter, not as the job definition.',
+      'SYSTEMS CHARTER FLUSHED 2026-09-24. Tool-router, Engine read-only, ML explain, registry routing. No auto-trade.',
   },
   {
     name: 'Necrothys',
     realm: 'Tartarus',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Signal & engine execution',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Engine execution · Phase 1 discipline · defined-risk · Signal process',
     notes:
-      'Execution discipline layer. Phase 1 defined-risk only, 7% max loss. Boundary: Thanatos owns systems/API; Necrothys owns trade process when active. Charter not fully flushed.',
+      'DUTIES FLUSHED 2026-09-24. Engine execution discipline. Defined-risk only; max L ≤ 7% Net Liq; full format before ticket; signals input not auto-fire; journal stand-downs. Boundary: Thanatos = systems/API.',
   },
   {
     name: 'HalfTrend Signal Engine',
@@ -107,7 +107,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-14',
     thread: 'tools/tradingview/halftrend-long-short-signal-engine.pine',
-    notes: 'BigBeluga Long/Short. ENGINE_RULES.md. Tool artifact, not a resident charter.',
+    notes: 'BigBeluga Long/Short. Tool artifact — input to Necrothys, not a resident charter.',
   },
   {
     name: 'Helveth',
@@ -172,7 +172,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Academy · Real Stage 1 · Journey · Mindset · Blueprint',
-    notes: 'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Academy substance. Real Stage 1 preferred.',
+    notes: 'DUTIES FLUSHED 2026-09-24. Academy substance. Real Stage 1 preferred.',
   },
   {
     name: 'Acheron Vail',
@@ -180,7 +180,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Two-layer captions · Pillar + highlight · Before ship',
-    notes: 'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Two-layer captions; structure polish.',
+    notes: 'DUTIES FLUSHED 2026-09-24. Two-layer captions; structure polish.',
   },
   {
     name: 'Content Engine — Captions',
@@ -201,10 +201,11 @@ export const COLONY_AGENTS: ColonyAgent[] = [
   {
     name: 'Yamaeth',
     realm: 'Asphodel',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Long-term thesis tracking',
-    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer. Charter not fully flushed.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Patience theses · VCX · WMT DRIP · Fidelity ZERO · long-hold memory',
+    notes:
+      'DUTIES FLUSHED 2026-09-24. Patience layer. VCX / WMT DRIP / ZERO-style. Thesis format; statement truth over Blossom; no short-term chase. Boundary: Morveth = lists.',
   },
   {
     name: 'Watchtower Research',
