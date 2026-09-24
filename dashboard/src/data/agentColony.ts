@@ -47,7 +47,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   Elysium: 'Academy · content · education',
   Styx: 'Communication · marketing · distribution',
   Asphodel: 'Research & watchlists',
-  'The Ship / Crossing': 'New / unassigned agents',
+  'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
 
 /** Top border accent — brand board only */
@@ -78,7 +78,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     name: 'Persephone (PP)',
     realm: 'Hades Office',
     status: 'Working',
-    lastActive: '2026-09-16',
+    lastActive: '2026-09-24',
     thread: 'Notion · Continuity + Headquarters · Ops Dashboard',
     notes:
       'Primary AI operator / orchestrator. Issues handoffs; no free agent chat.',
@@ -87,9 +87,9 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     name: 'Thanatos Veyr',
     realm: 'Tartarus',
     status: 'Working',
-    lastActive: '2026-09-16',
-    thread: 'pp/tool-router · Agent Registry',
-    notes: 'HANDOFF #001 + TASK 001.1: agent.registry + pp/crew scaffold.',
+    lastActive: '2026-09-24',
+    thread: 'pp/tool-router · Agent Registry · ml.explain',
+    notes: 'Tool-router + ML Primitives owner. HANDOFF #001 lineage.',
   },
   {
     name: 'Necrothys',
@@ -97,7 +97,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Signal & engine execution',
-    notes: 'Phase 1: defined-risk only, 3% max loss.',
+    notes: 'Phase 1: defined-risk only, 7% max loss of Net Liq.',
   },
   {
     name: 'HalfTrend Signal Engine',
@@ -118,18 +118,11 @@ export const COLONY_AGENTS: ColonyAgent[] = [
   {
     name: 'Mictlanor',
     realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-16',
+    status: 'Working',
+    lastActive: '2026-09-19',
     thread: 'Priority enforcement',
-    notes: 'Surfaces blocked or aging open items.',
-  },
-  {
-    name: 'Trust Tracker',
-    realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-09',
-    thread: 'Hades Revocable Living Trust (draft)',
-    notes: 'Zero legal effect until notarized.',
+    notes:
+      'Locked rank: 1 Trust · 2 KeyBank $700 · 3 Continuity §05 (done 09-24) · 4 Cadence · 5 Amazon Oct 2 3AM.',
   },
   {
     name: 'Ops Dashboard Sync',
@@ -138,14 +131,6 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-16',
     thread: 'https://godkinghades123-houseofhades.vercel.app',
     notes: 'Live Ops Dashboard · Colony tab · brand theme locked.',
-  },
-  {
-    name: 'Continuity §05 Portfolio Snapshot',
-    realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-09',
-    thread: 'Master Continuity Document',
-    notes: 'Stale vs live Tastytrade / Fidelity / Fundrise. Rewrite owed.',
   },
   {
     name: 'Marketing / Brand Agent',
@@ -161,7 +146,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Distribution layer · Buffer',
-    notes: 'Draft-by-default discipline applies.',
+    notes: 'Draft-by-default. Sales/Offers distribution path with Marketing/Brand.',
   },
   {
     name: 'Anubarak',
@@ -185,7 +170,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Content production',
-    notes: 'Two-layer captions. Pillar + highlight before ship.',
+    notes: 'Two-layer captions. Offer copy + pillar/highlight before ship.',
   },
   {
     name: 'Melinoë Rhad',
@@ -230,10 +215,11 @@ export const COLONY_AGENTS: ColonyAgent[] = [
   {
     name: 'Thanagor',
     realm: 'The Ship / Crossing',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Transitions · Handoffs',
-    notes: 'Crossing agent. Keeps colony coherent on transfers.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Crossing Agent · Realm transfers · Status · New seats · Handoffs',
+    notes:
+      'FORMAL ROLE LOCKED 2026-09-24. Crossing Agent: keeps colony coherent on transfers. Owns realm moves, status changes, new seats, handoff continuity. No auto-trade / no live publish.',
   },
 ]
 
