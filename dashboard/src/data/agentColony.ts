@@ -43,7 +43,7 @@ export const REALM_ORDER: Realm[] = [
 export const REALM_DEPT: Record<Realm, string> = {
   'Hades Office': 'Founder desk · command · user input',
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
-  Tartarus: 'Engine · high-stakes execution · tool-router',
+  Tartarus: 'Systems (Thanatos) · Engine read · ML · execution discipline',
   Elysium: 'Academy (Melinoë) · two-layer captions (Acheron)',
   Styx: 'Make/post (Marketing) · drafts (Styxion) · identity (Anubarak)',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
@@ -88,8 +88,9 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     realm: 'Tartarus',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: 'pp/tool-router · Agent Registry · ml.explain',
-    notes: 'Tool-router + ML Primitives owner. HANDOFF #001 lineage.',
+    thread: 'Systems charter · tool-router · Engine read · ml.explain · agent.registry',
+    notes:
+      'FORMAL ROLE LOCKED + SYSTEMS CHARTER FLUSHED 2026-09-24. Owns tool-router, Engine read-only path, ML primitives (explain only), agent.registry routing, underworld infra. No auto-trade / no order submit / no ML training. HANDOFF #001 tasks sit under charter, not as the job definition.',
   },
   {
     name: 'Necrothys',
@@ -97,7 +98,8 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Signal & engine execution',
-    notes: 'Phase 1: defined-risk only, 7% max loss of Net Liq.',
+    notes:
+      'Execution discipline layer. Phase 1 defined-risk only, 7% max loss. Boundary: Thanatos owns systems/API; Necrothys owns trade process when active. Charter not fully flushed.',
   },
   {
     name: 'HalfTrend Signal Engine',
@@ -105,7 +107,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-14',
     thread: 'tools/tradingview/halftrend-long-short-signal-engine.pine',
-    notes: 'BigBeluga Long/Short. ENGINE_RULES.md.',
+    notes: 'BigBeluga Long/Short. ENGINE_RULES.md. Tool artifact, not a resident charter.',
   },
   {
     name: 'Helveth',
@@ -113,7 +115,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Needs Human',
     lastActive: '2026-09-16',
     thread: 'Legal & structural accountability',
-    notes: 'Trust drafted — still not notarized. Highest unresolved priority.',
+    notes: 'Trust drafted — still not notarized. Highest unresolved priority. Duties not fully flushed.',
   },
   {
     name: 'Mictlanor',
@@ -122,7 +124,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-19',
     thread: 'Priority enforcement',
     notes:
-      'Locked rank: 1 Trust · 2 KeyBank $700 · 3 Continuity §05 (done 09-24) · 4 Cadence · 5 Amazon Oct 2 3AM.',
+      'Priority rank locked. Full duty sheet not flushed. 1 Trust · 2 KeyBank $700 · 3 §05 done · 4 Cadence · 5 Amazon Oct 2 3AM.',
   },
   {
     name: 'Ops Dashboard Sync',
@@ -138,8 +140,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'tools/marketing · Buffer · Pillar · Highlight · #HADES #hadesmarkets',
-    notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Make and post under gates. Owns Buffer stack.',
+    notes: 'FORMAL ROLE LOCKED 2026-09-24. Make and post under gates. Owns Buffer stack.',
   },
   {
     name: 'Styxion',
@@ -147,8 +148,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Drafts · Distribution · Buffer queue path',
-    notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default.',
+    notes: 'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution.',
   },
   {
     name: 'Anubarak',
@@ -156,8 +156,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Identity protection · Buffer channel status',
-    notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Identity beyond core. Buffer read/status only.',
+    notes: 'FORMAL ROLE LOCKED 2026-09-24. Identity beyond core. Buffer read/status only.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -173,17 +172,15 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Academy · Real Stage 1 · Journey · Mindset · Blueprint',
-    notes:
-      'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Academy substance. Real Stage 1 preferred.',
+    notes: 'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Academy substance. Real Stage 1 preferred.',
   },
   {
     name: 'Acheron Vail',
     realm: 'Elysium',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: 'Two-layer captions · Pillar + highlight · Structure polish · Before ship',
-    notes:
-      'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Two-layer captions (L1 HADES + L2 Black Wealth). Pillar + highlight before ship. Elevates structure; Melinoë owns substance.',
+    thread: 'Two-layer captions · Pillar + highlight · Before ship',
+    notes: 'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Two-layer captions; structure polish.',
   },
   {
     name: 'Content Engine — Captions',
@@ -207,7 +204,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Long-term thesis tracking',
-    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer.',
+    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer. Charter not fully flushed.',
   },
   {
     name: 'Watchtower Research',
