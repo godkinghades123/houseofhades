@@ -45,7 +45,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
   Tartarus: 'Engine · high-stakes execution · tool-router',
   Elysium: 'Academy · content · education',
-  Styx: 'Marketing · distribution · identity (Anubarak)',
+  Styx: 'Drafts (Styxion) · identity (Anubarak) · Buffer',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
@@ -138,15 +138,17 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-14',
     thread: 'tools/marketing · Buffer API',
-    notes: 'Draft-by-default. Pillar / highlight / hashtag gates. Owns create_post path.',
+    notes:
+      'Buffer stack + secret + script rules. create_post gates. Styxion owns operational drafts/distribution on top.',
   },
   {
     name: 'Styxion',
     realm: 'Styx',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Distribution layer · Buffer',
-    notes: 'Channel crossing / distribution path with Marketing/Brand.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Drafts · Distribution · Buffer queue path · Channel crossing',
+    notes:
+      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue/schedule only after human approval. Pillar + highlight + #HADES #hadesmarkets. Boundary: Marketing/Brand = stack; Anubarak = identity status.',
   },
   {
     name: 'Anubarak',
@@ -155,7 +157,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'Identity protection · Outer platforms · Buffer channel status',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core platforms. May use Buffer (list_channels / status) to see brand identity health. Read/status only — no auto-publish. Drift watch + @houseofhadesinc migration awareness.',
+      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only — no auto-publish. Drift watch + @houseofhadesinc migration awareness.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -196,7 +198,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: '👁 Watchtower · 📊 Investment Research Vault · Watchlist memory',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower management + Vault watchlists. Lists untrimmed; cross-lists intentional. Boundary vs Yamaeth (patience theses).',
+      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower + Vault watchlists. Lists untrimmed; cross-lists intentional.',
   },
   {
     name: 'Yamaeth',
