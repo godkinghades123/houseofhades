@@ -46,7 +46,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   Tartarus: 'Engine · high-stakes execution · tool-router',
   Elysium: 'Academy · content · education',
   Styx: 'Communication · marketing · distribution',
-  Asphodel: 'Research & watchlists',
+  Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
 }
 
@@ -191,10 +191,11 @@ export const COLONY_AGENTS: ColonyAgent[] = [
   {
     name: 'Morveth',
     realm: 'Asphodel',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Research synthesis',
-    notes: 'Supports Watchtower. Sector lists untrimmed.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: '👁 Watchtower · 📊 Investment Research Vault · Watchlist memory',
+    notes:
+      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower management + Vault watchlists. Lists untrimmed; cross-lists intentional; Entry→Stop→Invalidation→Reasoning→Watchlist. Boundary vs Yamaeth (patience theses). No auto-trade.',
   },
   {
     name: 'Yamaeth',
@@ -202,7 +203,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Long-term thesis tracking',
-    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer.',
+    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer — not list structure.',
   },
   {
     name: 'Watchtower Research',
@@ -210,7 +211,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-08',
     thread: 'Investment Research Vault / Watchtower',
-    notes: 'Weekly net-change snapshots flagged stale.',
+    notes: 'Weekly net-change snapshots flagged stale — Morveth owns refresh flags.',
   },
   {
     name: 'Thanagor',
