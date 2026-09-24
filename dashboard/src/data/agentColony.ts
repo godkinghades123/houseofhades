@@ -44,7 +44,7 @@ export const REALM_DEPT: Record<Realm, string> = {
   'Hades Office': 'Founder desk · command · user input',
   'Judgment Hall': 'Ops · Continuity · Legal · PP orchestration',
   Tartarus: 'Engine · high-stakes execution · tool-router',
-  Elysium: 'Academy (Melinoë) · elevated content (Acheron)',
+  Elysium: 'Academy (Melinoë) · two-layer captions (Acheron)',
   Styx: 'Make/post (Marketing) · drafts (Styxion) · identity (Anubarak)',
   Asphodel: 'Research & watchlists · Morveth Watchtower',
   'The Ship / Crossing': 'Crossing Agent · transfers · new seats',
@@ -139,25 +139,25 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     lastActive: '2026-09-24',
     thread: 'tools/marketing · Buffer · Pillar · Highlight · #HADES #hadesmarkets',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Make and post HADES content under pillar / highlight / hashtag gates. Owns Buffer stack.',
+      'FORMAL ROLE LOCKED 2026-09-24. Make and post under gates. Owns Buffer stack.',
   },
   {
     name: 'Styxion',
     realm: 'Styx',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: 'Drafts · Distribution · Buffer queue path · Channel crossing',
+    thread: 'Drafts · Distribution · Buffer queue path',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default; queue only after approval.',
+      'FORMAL ROLE LOCKED 2026-09-24. Owns drafts and distribution. Draft-by-default.',
   },
   {
     name: 'Anubarak',
     realm: 'Styx',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: 'Identity protection · Outer platforms · Buffer channel status',
+    thread: 'Identity protection · Buffer channel status',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Identity protection beyond core. Buffer read/status only.',
+      'FORMAL ROLE LOCKED 2026-09-24. Identity beyond core. Buffer read/status only.',
   },
   {
     name: 'Instagram Handle Migration',
@@ -172,17 +172,18 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     realm: 'Elysium',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: 'Academy · Real Stage 1 · Journey · Mindset · Philosophy · Blueprint',
+    thread: 'Academy · Real Stage 1 · Journey · Mindset · Blueprint',
     notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Make trading academy content. Real Stage 1 preferred (honest build, no fake rich). Two-layer captions; handoff to Marketing/Brand gates. No hype.',
+      'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Academy substance. Real Stage 1 preferred.',
   },
   {
     name: 'Acheron Vail',
     realm: 'Elysium',
-    status: 'Idle',
-    lastActive: '2026-09-16',
-    thread: 'Content production',
-    notes: 'Elevated long-form structure. Supports Melinoë / Marketing packages when length or polish needs lift.',
+    status: 'Working',
+    lastActive: '2026-09-24',
+    thread: 'Two-layer captions · Pillar + highlight · Structure polish · Before ship',
+    notes:
+      'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-24. Two-layer captions (L1 HADES + L2 Black Wealth). Pillar + highlight before ship. Elevates structure; Melinoë owns substance.',
   },
   {
     name: 'Content Engine — Captions',
@@ -190,16 +191,15 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-12',
     thread: 'Content Production SOPs',
-    notes: 'Layer 1 HADES + Layer 2 Black Wealth. #HADES #hadesmarkets.',
+    notes: 'SOP reference. Live caption craft = Acheron; Academy substance = Melinoë.',
   },
   {
     name: 'Morveth',
     realm: 'Asphodel',
     status: 'Working',
     lastActive: '2026-09-24',
-    thread: '👁 Watchtower · 📊 Investment Research Vault · Watchlist memory',
-    notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Supports Watchtower + Vault watchlists.',
+    thread: 'Watchtower · Investment Research Vault · Watchlist memory',
+    notes: 'FORMAL ROLE LOCKED 2026-09-24. Watchtower + Vault watchlists.',
   },
   {
     name: 'Yamaeth',
@@ -207,7 +207,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Idle',
     lastActive: '2026-09-16',
     thread: 'Long-term thesis tracking',
-    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer — not list structure.',
+    notes: 'VCX, WMT DRIP, Fidelity ZERO. Patience layer.',
   },
   {
     name: 'Watchtower Research',
@@ -223,8 +223,7 @@ export const COLONY_AGENTS: ColonyAgent[] = [
     status: 'Working',
     lastActive: '2026-09-24',
     thread: 'Crossing Agent · Realm transfers · Status · New seats · Handoffs',
-    notes:
-      'FORMAL ROLE LOCKED 2026-09-24. Crossing Agent: keeps colony coherent on transfers.',
+    notes: 'FORMAL ROLE LOCKED 2026-09-24. Crossing Agent.',
   },
 ]
 
