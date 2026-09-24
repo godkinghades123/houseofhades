@@ -24,7 +24,14 @@
     "tastytrade balances": { "tools": ["engine"], "capability": "engine.get_balances" },
     "engine balances": { "tools": ["engine"], "capability": "engine.get_balances" },
     "balance snapshots": { "tools": ["engine"], "capability": "engine.get_balance_snapshots" },
-    "engine snapshots": { "tools": ["engine"], "capability": "engine.get_balance_snapshots" }
+    "engine snapshots": { "tools": ["engine"], "capability": "engine.get_balance_snapshots" },
+    "explain linear regression": { "tools": ["ml"], "capability": "ml.explain" },
+    "explain logistic regression": { "tools": ["ml"], "capability": "ml.explain" },
+    "ml primitives": { "tools": ["ml"], "capability": "ml.explain" },
+    "which algorithm should i use": { "tools": ["ml"], "capability": "ml.explain" },
+    "decision tree mental model": { "tools": ["ml"], "capability": "ml.explain" },
+    "explain knn": { "tools": ["ml"], "capability": "ml.explain" },
+    "explain svm": { "tools": ["ml"], "capability": "ml.explain" }
   },
   "hard_rules": [
     {
@@ -72,6 +79,17 @@
       "force_tool": "engine",
       "capability": "engine.get_balances",
       "reason": "Live Engine balances/snapshots → tools/engine (Thanatos / Tartarus). Read-only."
+    },
+    {
+      "id": "PP-ROUTE-007",
+      "if_contains_any": [
+        "linear regression", "logistic regression", "decision tree", "support vector",
+        "knn", "k-nearest", "ml explain", "ml primitives", "explain algorithm",
+        "mental model", "hades translation", "which algorithm"
+      ],
+      "force_tool": "ml",
+      "capability": "ml.explain",
+      "reason": "ML Primitives knowledge layer — explain only, Phase-1 safe, no training."
     }
   ]
 }
