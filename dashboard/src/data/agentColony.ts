@@ -112,10 +112,11 @@ export const COLONY_AGENTS: ColonyAgent[] = [
   {
     name: 'Helveth',
     realm: 'Judgment Hall',
-    status: 'Needs Human',
-    lastActive: '2026-09-16',
-    thread: 'Legal & structural accountability',
-    notes: 'Trust drafted — still not notarized. Highest unresolved priority. Duties not fully flushed.',
+    status: 'Working',
+    lastActive: '2026-09-27',
+    thread: 'Legal & structural accountability · Trust · entity map · duties flushed',
+    notes:
+      'FORMAL ROLE LOCKED + DUTIES FLUSHED 2026-09-27. Own legal/structural accountability. Trust still not notarized (zero legal effect). Entity map locked. Boundary vs Mictlanor (rank).',
   },
   {
     name: 'Mictlanor',
