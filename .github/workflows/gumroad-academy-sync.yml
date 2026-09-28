@@ -1,0 +1,30 @@
+name: Gumroad Academy Sync
+
+# Weekly sales totals → Continuity (append-only). Phase 1 read-only.
+on:
+  schedule:
+    - cron: "30 10 * * 1"   # Mondays 10:30 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync Academy sales → Continuity
+        env:
+          HADES__GUMROAD: ${{ secrets.HADES__GUMROAD }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_CONTINUITY_PAGE_ID: ${{ secrets.NOTION_CONTINUITY_PAGE_ID }}
+          GUMROAD_PRODUCT_ID: ${{ secrets.GUMROAD_PRODUCT_ID }}
+        run: python tools/gumroad/sync_sales.py
