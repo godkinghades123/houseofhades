@@ -34,10 +34,19 @@ def normalize(text: str) -> str:
     return t
 
 
+def has(needle: str, text: str) -> bool:
+    """Whole-word match (allows plural/-ed/-ing) so 'pr' != 'improve', 'push' != 'pushback'."""
+    n = needle.lower().strip()
+    if not n:
+        return False
+    return re.search(r"(?<![a-z0-9])" + re.escape(n) + r"(?:s|es|ed|ing)?(?![a-z0-9])", text) is not None
+
+
 def exact_match(text: str, aliases: dict[str, Any]) -> dict[str, Any] | None:
     phrases = aliases.get("exact_phrases", {})
-    for phrase, payload in phrases.items():
-        if phrase in text:
+    # Longest phrase first so a short phrase can't shadow a more specific one.
+    for phrase, payload in sorted(phrases.items(), key=lambda kv: len(kv[0]), reverse=True):
+        if has(phrase, text):
             tools = payload.get("tools") or [payload.get("tool")]
             tools = [t for t in tools if t]
             return {
@@ -51,13 +60,18 @@ def exact_match(text: str, aliases: dict[str, Any]) -> dict[str, Any] | None:
     return None
 
 
-def hard_rules(text: str, aliases: dict[str, Any]) -> dict[str, Any] | None:
+def hard_rules(
+    text: str, aliases: dict[str, Any], *, priority_only: bool = False
+) -> dict[str, Any] | None:
     for rule in aliases.get("hard_rules", []):
+        # "priority" rules (e.g. reminders) run before exact phrases; the rest run after.
+        if priority_only != bool(rule.get("priority")):
+            continue
         needles = rule.get("if_contains_any", [])
         unless = rule.get("unless_contains", [])
-        if unless and any(u in text for u in unless):
+        if unless and any(has(u, text) for u in unless):
             continue
-        if any(n in text for n in needles):
+        if any(has(n, text) for n in needles):
             if "force_tools" in rule:
                 tools = rule["force_tools"]
                 order = rule.get("order") or tools
@@ -71,6 +85,7 @@ def hard_rules(text: str, aliases: dict[str, Any]) -> dict[str, Any] | None:
                 "confidence": 0.97,
                 "reason": f"{rule['id']}: {rule.get('reason', '')}",
                 "rule_id": rule["id"],
+                "capability": rule.get("capability"),
             }
     return None
 
@@ -84,14 +99,14 @@ def score_tools(text: str, registry: dict[str, Any]) -> list[tuple[str, float, l
         hits: list[str] = []
         score = 0.0
         for kw in meta.get("keywords", []):
-            if kw.lower() in text:
+            if has(kw, text):
                 hits.append(kw)
                 # longer keywords weigh more
                 score += 1.0 + min(len(kw), 20) / 20.0
         for cap in meta.get("capabilities", []):
             # capability token fragments e.g. knowledge.write → knowledge
-            parts = cap.replace(".", " ").split()
-            if all(p in text for p in parts if len(p) > 3):
+            parts = [p for p in cap.replace(".", " ").split() if len(p) > 3]
+            if parts and all(has(p, text) for p in parts):
                 score += 0.5
                 hits.append(cap)
         if score > 0:
@@ -108,12 +123,12 @@ def capability_route(text: str, registry: dict[str, Any]) -> dict[str, Any] | No
         examples = meta.get("examples", [])
         score = 0.0
         for ex in examples:
-            if ex in text:
+            if has(ex, text):
                 score += 2.0
             else:
                 # partial token overlap
                 for tok in ex.split():
-                    if len(tok) > 3 and tok in text:
+                    if len(tok) > 3 and has(tok, text):
                         score += 0.35
         # also match capability name tokens in text
         for tok in cap_name.replace(".", " ").split():
@@ -127,9 +142,6 @@ def capability_route(text: str, registry: dict[str, Any]) -> dict[str, Any] | No
         tools = [meta["tool"]]
         if meta.get("also"):
             tools = tools + list(meta["also"])
-        if meta.get("fallback"):
-            # only if primary would be missing — still return primary first
-            pass
         conf = min(0.95, 0.7 + best_score * 0.05)
         return {
             "level": 2,
@@ -146,6 +158,10 @@ def route(user_request: str) -> dict[str, Any]:
     text = normalize(user_request)
     registry = load_json("registry.json")
     aliases = load_json("aliases.json")
+
+    hit = hard_rules(text, aliases, priority_only=True)
+    if hit:
+        return finalize(hit, registry)
 
     hit = exact_match(text, aliases)
     if hit:

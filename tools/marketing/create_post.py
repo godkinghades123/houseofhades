@@ -35,7 +35,7 @@ Platforms map to channel IDs via env vars (see list_channels.py):
 """
 
 import os
-import sys
+import re
 import json
 import argparse
 import datetime
@@ -98,7 +98,8 @@ def validate_content(pillar: str, highlight: str, text: str):
     if highlight not in VALID_HIGHLIGHTS:
         errors.append(f"--highlight must be one of {sorted(VALID_HIGHLIGHTS)}")
     for tag in MANDATORY_HASHTAGS:
-        if tag.lower() not in text.lower():
+        # Whole-tag match: "#hadesmarkets" must NOT satisfy "#HADES".
+        if not re.search(re.escape(tag) + r"(?![A-Za-z0-9_])", text, re.I):
             errors.append(f"Caption is missing the mandatory hashtag close: {tag}")
     if errors:
         eprint("[blocked] This post violates HADES content rules:")
@@ -108,7 +109,7 @@ def validate_content(pillar: str, highlight: str, text: str):
 
 
 def log_run(record: dict):
-    record["logged_at"] = datetime.datetime.utcnow().isoformat() + "Z"
+    record["logged_at"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
     with open(LOG_PATH, "a") as f:
         f.write(json.dumps(record) + "\n")
 

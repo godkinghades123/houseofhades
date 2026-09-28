@@ -12,14 +12,11 @@
     "commit this": { "tools": ["github"], "capability": "repo.modify" },
     "house of hades repo": { "tools": ["github"], "capability": "repo.modify" },
     "who needs the duke": { "tools": ["notion"], "capability": "agent.registry" },
-    "who needs the Duke": { "tools": ["notion"], "capability": "agent.registry" },
     "agent status": { "tools": ["notion"], "capability": "agent.registry" },
     "colony status": { "tools": ["notion"], "capability": "colony.status" },
     "needs human agents": { "tools": ["notion"], "capability": "agent.registry" },
-    "Needs Human agents": { "tools": ["notion"], "capability": "agent.registry" },
     "open handoffs": { "tools": ["notion"], "capability": "agent.registry" },
     "agent registry": { "tools": ["notion"], "capability": "agent.registry" },
-    "Agent Registry": { "tools": ["notion"], "capability": "agent.registry" },
     "engine net liq": { "tools": ["engine"], "capability": "engine.get_balances" },
     "tastytrade balances": { "tools": ["engine"], "capability": "engine.get_balances" },
     "engine balances": { "tools": ["engine"], "capability": "engine.get_balances" },
@@ -34,6 +31,13 @@
     "explain svm": { "tools": ["ml"], "capability": "ml.explain" }
   },
   "hard_rules": [
+    {
+      "id": "PP-ROUTE-004",
+      "priority": true,
+      "if_contains_any": ["remind me", "set a reminder", "every two days"],
+      "force_tool": "automations",
+      "reason": "Reminders → Automations, not Todoist"
+    },
     {
       "id": "PP-ROUTE-001",
       "if_contains_any": ["commit", "push", "repository", "repo file", "issue template", "github issue"],
@@ -53,12 +57,6 @@
       "force_tools": ["github", "notion"],
       "order": ["github", "notion"],
       "reason": "Cross-system: execute first, then memory link"
-    },
-    {
-      "id": "PP-ROUTE-004",
-      "if_contains_any": ["remind me", "set a reminder", "every two days"],
-      "force_tool": "automations",
-      "reason": "Reminders → Automations, not Todoist"
     },
     {
       "id": "PP-ROUTE-005",

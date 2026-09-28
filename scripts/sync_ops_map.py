@@ -96,13 +96,20 @@ def fetch_hq_text(page_id: str) -> str:
     return "\n".join(texts)
 
 
+_NUM = r"(\d[\d,]*(?:\.\d+)?)"  # 1,234.56 | 245.32 | 700 (no trailing '.', commas ok)
+
+
 def parse_money(text: str, patterns: list[str], default: float) -> float:
+    """First pattern whose capture group parses as a number.
+
+    Patterns should capture with _NUM and stay on one line: use [^\\d\\n]{0,40}
+    between the label and the number so a label can't grab a number from another line.
+    """
     for pat in patterns:
         m = re.search(pat, text, re.I)
         if m:
-            raw = m.group(1).replace(",", "")
             try:
-                return float(raw)
+                return float(m.group(1).replace(",", ""))
             except ValueError:
                 continue
     return default
@@ -197,20 +204,19 @@ def main() -> None:
     net_liq = parse_money(
         text,
         [
-            r"Net Liq[^\d]*([\d.]+)",
-            r"Tastytrade[^\d]*([\d.]+)",
-            r"Engine[^\d]*([\d.]+)",
+            r"Net Liq[^\d\n]{0,40}\$?" + _NUM,
+            r"Tastytrade[^\d\n]{0,40}\$?" + _NUM,
         ],
         287.0,
     )
     keybank = parse_money(
         text,
-        [r"KeyBank[^\d]*~?\$?([\d.]+)", r"KeyBank HYSA[^\d]*([\d.]+)"],
+        [r"KeyBank(?: HYSA)?[^\d\n]{0,40}~?\$?" + _NUM],
         65.0,
     )
-    chime = parse_money(text, [r"Chime[^\d]*~?\$?([\d.]+)"], 10.0)
-    groundfloor = parse_money(text, [r"Groundfloor[^\d]*~?\$?([\d.]+)"], 30.11)
-    fidelity = parse_money(text, [r"Fidelity Go[^\d]*~?\$?([\d.]+)"], 80.0)
+    chime = parse_money(text, [r"Chime[^\d\n]{0,40}~?\$?" + _NUM], 10.0)
+    groundfloor = parse_money(text, [r"Groundfloor[^\d\n]{0,40}~?\$?" + _NUM], 30.11)
+    fidelity = parse_money(text, [r"Fidelity Go[^\d\n]{0,40}~?\$?" + _NUM], 80.0)
 
     engine_live = try_live_engine()
     options_bp = 110.0

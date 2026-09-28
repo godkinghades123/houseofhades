@@ -7,8 +7,7 @@ Logs publishing history to collector_log.jsonl.
 """
 
 import json
-import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List
 from pathlib import Path
 from buffer_config import load_buffer_config, BufferConfig
@@ -44,7 +43,7 @@ class BufferPublisher:
             platforms = ["instagram", "x", "tiktok"]
         
         result = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "content_preview": content[:100] + "..." if len(content) > 100 else content,
             "platforms": platforms,
             "status": "pending",
@@ -74,13 +73,15 @@ class BufferPublisher:
                 result["channel_ids"][platform] = channel_id
                 result["status"] = "scheduled_staging"
             else:
-                # TODO: Implement actual Buffer API call
-                # For now, treat as scheduled
-                result["channel_ids"][platform] = channel_id
-                result["status"] = "scheduled_production"
+                # Not implemented: do NOT report success for a post that was never sent.
+                # Real publishing (with the approval gate) lives in tools/marketing/create_post.py.
+                result["errors"].append(
+                    f"Production publish not implemented for {platform}; "
+                    "use tools/marketing/create_post.py"
+                )
         
-        if result["errors"] and self.config.environment == "production":
-            result["status"] = "failed"
+        if result["errors"]:
+            result["status"] = "failed" if not result["channel_ids"] else "partial"
         
         # Log to collector_log.jsonl
         self._log_publish(result, metadata)

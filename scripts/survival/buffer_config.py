@@ -70,7 +70,7 @@ class BufferConfig:
         status_lines = [
             "=== BUFFER INTEGRATION STATUS ===",
             f"Environment: {self.environment}",
-            f"Instagram Channel: {'✓' if self.instagram_channel else '��'}",
+            f"Instagram Channel: {'✓' if self.instagram_channel else '✗'}",
             f"X Channel: {'✓' if self.x_channel else '✗'}",
             f"TikTok Channel: {'✓' if self.tiktok_channel else '✗'}",
             f"API Token: {'✓ (set)' if self.api_token else '✗ (missing)'}",
